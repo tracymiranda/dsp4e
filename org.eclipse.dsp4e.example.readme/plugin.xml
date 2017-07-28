@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.eclipse.dsp4e.example.readme.launcher.ReadmeLaunchDelegate"
+            id="readme.launchType"
+            modes="debug"
+            name="ReadMe">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.eclipse.dsp4e.example.readme.launcher.ReadmeTabGroup"
+            description="Debug a readme.md file"
+            id="readme.tabGroup"
+            type="readme.launchType">
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="readme.launchType"
+            icon="icons/pda.gif"
+            id="readme.typeImage">
+      </launchConfigurationTypeImage>
+   </extension>
+
+</plugin>
