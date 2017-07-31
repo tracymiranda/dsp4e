@@ -33,33 +33,33 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 		this.launch = launch;
 		this.process = process;
 		
-		// give interpreter a chance to start
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
-		
-		BufferedWriter bufferedWriter = new BufferedWriter(writer);
-		BufferedReader bufferedReader = new BufferedReader(reader);
-		
-		bufferedWriter.write("COntent Length 1234\r\n\r\n");
-		bufferedWriter.write("{json of initialize}");
-
-		PrintWriter initFile;
-		try {
-			initFile = new PrintWriter("C:\\data\\Projects\\mockdebug\\dsp4e\\init.txt");
-			commandWriter = new PrintWriter(initFile);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		
-		// give interpreter a chance to start
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-		}
+//		// give interpreter a chance to start
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//		}
+//		
+//		BufferedWriter bufferedWriter = new BufferedWriter(writer);
+//		BufferedReader bufferedReader = new BufferedReader(reader);
+//		
+//		bufferedWriter.write("COntent Length 1234\r\n\r\n");
+//		bufferedWriter.write("{json of initialize}");
+//
+//		PrintWriter initFile;
+//		try {
+//			initFile = new PrintWriter("C:\\data\\Projects\\mockdebug\\dsp4e\\init.txt");
+//			commandWriter = new PrintWriter(initFile);
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//
+//		
+//		// give interpreter a chance to start
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//		}
 	}
 
 	@Override
@@ -85,14 +85,15 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 
 	@Override
 	public boolean isTerminated() {
-		// TODO Auto-generated method stub
-		return false;
+		// TODO Auto-generated method stub	
+		return process.isTerminated();
 	}
 
 	@Override
 	public void terminate() throws DebugException {
 		// TODO Auto-generated method stub
 		System.out.println("Try to terminate stuff");
+		process.terminate();
 	}
 
 	@Override
