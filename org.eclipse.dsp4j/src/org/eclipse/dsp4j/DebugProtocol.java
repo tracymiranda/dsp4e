@@ -19,6 +19,13 @@ public class DebugProtocol {
 		public int seq;
 		/** One of 'request', 'response', or 'event'. */
 		public String type;
+		
+		@Override
+		public String toString() {
+			return "ProtocolMessage [seq=" + seq + ", type=" + type + "]";
+		}
+		
+		
 	}
 
 	/** A client or server-initiated request. */

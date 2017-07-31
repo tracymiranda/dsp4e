@@ -1,10 +1,8 @@
 package org.eclipse.dsp43.example.readme.debugmodel;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -30,7 +28,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 	private ILaunch launch;
 	private IProcess process;
 
-	private BufferedWriter writer;
+	private OutputStreamWriter writer;
 	private BufferedReader reader;
 
 	private Gson gson;
@@ -46,8 +44,9 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 		} catch (InterruptedException e) {
 		}
 
-		writer = new BufferedWriter(writer);
-		reader = new BufferedReader(reader);
+		//this.writer = new BufferedWriter(writer);
+		this.writer = (OutputStreamWriter) writer;
+		this.reader = new BufferedReader(reader);
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.create();
 
@@ -79,9 +78,10 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 		String messageJson = gson.toJson(message);
 		writer.write(CONTENT_LENGTH + messageJson.length() + "\r\n\r\n");
 		writer.write(messageJson);
-		writer.flush();
 		System.out.println("Sent: " + messageJson);
 		System.out.println("As object: " + message);
+		writer.flush();
+
 	}
 
 	private <T> T recvMessage(Class<T> messageClasss) throws IOException {

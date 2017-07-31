@@ -2,7 +2,6 @@ package org.eclipse.dsp4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -15,6 +14,12 @@ import com.google.gson.GsonBuilder;
 
 public class TestCode {
 
+//	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
+//	private	static final String NODE_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
+
+	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
+	private	static final String NODE_DEBUG_ARG = "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+	
 	private static final String CONTENT_LENGTH = "Content-Length: ";
 
 	/**
@@ -59,7 +64,7 @@ public class TestCode {
 		String initializeString = gson.toJson(initialize);
 
 
-		ProcessBuilder processBuilder = new ProcessBuilder("/scratch/node/node-v6.11.0-linux-x64/bin/node", "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js");
+		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, NODE_DEBUG_ARG);
 		Process process = processBuilder.start();
 		OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream());
 		writer.write(CONTENT_LENGTH + initializeString.length() + "\r\n\r\n");

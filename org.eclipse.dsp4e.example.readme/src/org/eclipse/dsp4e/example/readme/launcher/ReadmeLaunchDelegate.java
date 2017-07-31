@@ -38,8 +38,8 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 			IDebugTarget target;
 			try {
 				target = new ReadmeDebugTarget(launch, p,
-						new InputStreamReader(process.getInputStream(), "UTF-8"),
-						new OutputStreamWriter(process.getOutputStream(), "UTF-8"));
+						new InputStreamReader(process.getInputStream()),
+						new OutputStreamWriter(process.getOutputStream()));
 				launch.addDebugTarget(target);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
