@@ -27,5 +27,12 @@
             id="readme.typeImage">
       </launchConfigurationTypeImage>
    </extension>
+   <extension
+         point="org.eclipse.debug.ui.debugModelPresentations">
+      <debugModelPresentation
+            class="org.eclipse.dsp4e.example.readme.presentation.ReadmeDebugModelPresentation"
+            id="mock.debugModel">
+      </debugModelPresentation>
+   </extension>
 
 </plugin>
