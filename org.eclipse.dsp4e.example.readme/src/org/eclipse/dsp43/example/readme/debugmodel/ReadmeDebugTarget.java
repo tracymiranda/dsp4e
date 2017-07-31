@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
@@ -17,49 +15,96 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStreamsProxy;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
+import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
+import org.eclipse.dsp4j.DebugProtocol.InitializedEvent;
+import org.eclipse.dsp4j.DebugProtocol.ProtocolMessage;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget {
+	private static final String CONTENT_LENGTH = "Content-Length: ";
 
 	private ILaunch launch;
 	private IProcess process;
-	
-	private PrintWriter commandWriter;
-	private BufferedReader requestReader;
-	
+
+	private BufferedWriter writer;
+	private BufferedReader reader;
+
+	private Gson gson;
+
 	public ReadmeDebugTarget(ILaunch launch, IProcess process, Reader reader, Writer writer) throws IOException {
 		super(null);
 		this.launch = launch;
 		this.process = process;
-		
-//		// give interpreter a chance to start
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//		}
-//		
-//		BufferedWriter bufferedWriter = new BufferedWriter(writer);
-//		BufferedReader bufferedReader = new BufferedReader(reader);
-//		
-//		bufferedWriter.write("COntent Length 1234\r\n\r\n");
-//		bufferedWriter.write("{json of initialize}");
-//
-//		PrintWriter initFile;
-//		try {
-//			initFile = new PrintWriter("C:\\data\\Projects\\mockdebug\\dsp4e\\init.txt");
-//			commandWriter = new PrintWriter(initFile);
-//		} catch (FileNotFoundException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//
-//		
-//		// give interpreter a chance to start
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//		}
+
+		// give interpreter a chance to start
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+
+		writer = new BufferedWriter(writer);
+		reader = new BufferedReader(reader);
+		GsonBuilder builder = new GsonBuilder();
+		gson = builder.create();
+
+		InitializeRequest initialize = new InitializeRequest();
+		initialize.command = "initialize";
+		initialize.arguments = new InitializeRequestArguments();
+		initialize.arguments.clientID = "vscode";
+		initialize.arguments.adapterID = "mock";
+		initialize.arguments.pathFormat = "path";
+		initialize.arguments.linesStartAt1 = true;
+		initialize.arguments.columnsStartAt1 = true;
+		initialize.arguments.supportsVariableType = true;
+		initialize.arguments.supportsVariablePaging = true;
+		initialize.arguments.supportsRunInTerminalRequest = true;
+		initialize.type = "request";
+		initialize.seq = 1;
+
+		sendMessage(initialize);
+		InitializedEvent initialized = recvMessage(InitializedEvent.class);
+
+		// give interpreter a chance to start
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+	}
+
+	private void sendMessage(ProtocolMessage message) throws IOException {
+		String messageJson = gson.toJson(message);
+		writer.write(CONTENT_LENGTH + messageJson.length() + "\r\n\r\n");
+		writer.write(messageJson);
+		writer.flush();
+		System.out.println("Sent: " + messageJson);
+		System.out.println("As object: " + message);
+	}
+
+	private <T> T recvMessage(Class<T> messageClasss) throws IOException {
+		String contentLength;
+		while ((contentLength = reader.readLine()) != null) {
+			if (contentLength.startsWith(CONTENT_LENGTH)) {
+				int length = Integer.parseInt(contentLength.substring(CONTENT_LENGTH.length()));
+				char[] newline = new char[2];
+				reader.read(newline);
+				if ("\r\n".equals(new String(newline))) {
+					char[] data = new char[length];
+					int nRead = reader.read(data);
+					if (nRead == length) {
+						String contentJson = new String(data);
+						T result = gson.fromJson(contentJson, messageClasss);
+						System.out.println("Received: " + contentJson);
+						System.out.println("As object: " + result);
+						return result;
+					}
+				}
+			}
+		}
+		throw new IOException("No messages read");
 	}
 
 	@Override
