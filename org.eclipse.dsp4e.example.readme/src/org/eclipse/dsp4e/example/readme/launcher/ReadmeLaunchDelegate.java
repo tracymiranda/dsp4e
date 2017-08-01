@@ -1,15 +1,13 @@
 package org.eclipse.dsp4e.example.readme.launcher;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -18,10 +16,14 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dsp43.example.readme.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.example.readme.Activator;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
 	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
+
+//	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
+//	private static final String NODE_DEBUG_ARG = "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
@@ -35,19 +37,25 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 			// create a debug target
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				try {
-					target = new ReadmeDebugTarget(launch, p, new InputStreamReader(process.getInputStream()),
-							new OutputStreamWriter(process.getOutputStream()));
-					launch.addDebugTarget(target);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				target = new ReadmeDebugTarget(launch, p, new InputStreamReader(process.getInputStream()),
+						new OutputStreamWriter(process.getOutputStream()));
+				launch.addDebugTarget(target);
 			}
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			abort("Failed to launch debug process", e1);
 		}
 	}
+	
+	/**
+	 * Throws an exception with a new status containing the given
+	 * message and optional exception.
+	 *
+	 * @param message error message
+	 * @param e underlying exception
+	 * @throws CoreException
+	 */
+	private void abort(String message, Throwable e) throws CoreException {
+		throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, message, e));
+	}	
 
 }

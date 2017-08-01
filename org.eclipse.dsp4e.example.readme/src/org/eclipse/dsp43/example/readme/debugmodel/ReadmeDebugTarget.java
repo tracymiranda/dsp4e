@@ -7,7 +7,11 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -33,7 +37,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 
 	private Gson gson;
 
-	public ReadmeDebugTarget(ILaunch launch, IProcess process, Reader reader, Writer writer) throws IOException {
+	public ReadmeDebugTarget(ILaunch launch, IProcess process, Reader reader, Writer writer) throws CoreException {
 		super(null);
 		this.launch = launch;
 		this.process = process;
@@ -64,8 +68,13 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 		initialize.type = "request";
 		initialize.seq = 1;
 
-		sendMessage(initialize);
-		InitializedEvent initialized = recvMessage(InitializedEvent.class);
+		try {
+			sendMessage(initialize);
+			InitializedEvent initialized = recvMessage(InitializedEvent.class);
+		} catch (IOException e) {
+			requestFailed("Unable to initialize debug server", e);
+		}
+
 
 		// give interpreter a chance to start
 		try {
@@ -106,6 +115,18 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget 
 		}
 		throw new IOException("No messages read");
 	}
+	
+	/**
+	 * Throws a debug exception with a status code of <code>TARGET_REQUEST_FAILED</code>.
+	 *
+	 * @param message exception message
+	 * @param e underlying exception or <code>null</code>
+	 * @throws DebugException if a problem is encountered
+	 */
+	protected void requestFailed(String message, Throwable e) throws DebugException {
+		throw new DebugException(new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(),
+				DebugException.TARGET_REQUEST_FAILED, message, e));
+	}	
 
 	@Override
 	public IDebugTarget getDebugTarget() {
