@@ -20,31 +20,33 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dsp43.example.readme.debugmodel.ReadmeDebugTarget;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
+	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
+	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
 
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
-		List<String> commandList = new ArrayList<String>();
-		
-		commandList.add("C:\\Program Files\\nodejs\\node.exe \"C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js\"");
-		File workingDir = new File("C:\\Users\\tracy");
-		
-		String[] commandLine = commandList.toArray(new String[commandList.size()]);
-		Process process = DebugPlugin.exec(commandLine, workingDir);
-		IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
+		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, NODE_DEBUG_ARG);
+		Process process;
+		try {
+			process = processBuilder.start();
 
-		//create a debug target
-		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-			IDebugTarget target;
-			try {
-				target = new ReadmeDebugTarget(launch, p,
-						new InputStreamReader(process.getInputStream()),
-						new OutputStreamWriter(process.getOutputStream()));
-				launch.addDebugTarget(target);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
+			// create a debug target
+			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+				IDebugTarget target;
+				try {
+					target = new ReadmeDebugTarget(launch, p, new InputStreamReader(process.getInputStream()),
+							new OutputStreamWriter(process.getOutputStream()));
+					launch.addDebugTarget(target);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 
