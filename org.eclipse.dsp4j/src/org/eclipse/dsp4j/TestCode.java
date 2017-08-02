@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.InitializedEvent;
