@@ -7,10 +7,10 @@ import java.io.OutputStreamWriter;
 
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
-import org.eclipse.dsp4j.DebugProtocol.InitializedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ProtocolMessage;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsRequest;
+import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsResponse;
 import org.eclipse.dsp4j.DebugProtocol.Source;
 import org.eclipse.dsp4j.DebugProtocol.SourceBreakpoint;
 
@@ -124,11 +124,14 @@ public class TestCode {
 
 	
 		sendMessage(initialize);
-		InitializedEvent initialized = recvMessage(InitializedEvent.class);
+		recvMessage(InitializeRequest.class); //receive initialize event
+		recvMessage(SetBreakpointsRequest.class); //receive initialize response
 		
 		sendMessage(breakpoint);
-		recvMessage(SetBreakpointsRequest.class);
-		recvMessage(SetBreakpointsRequest.class);
+		recvMessage(SetBreakpointsResponse.class); //receive setBreakpoint request
+		
+		//Next we try a launch
+		//launch({"type":"mock","request":"launch","name":"Mock Debug","program":"c:\\data\\Projects\\mockdebug/readme.md","stopOnEntry":true,"trace":true,"__sessionId":"ef06af99-c5f3-4fc6-8705-b96161c2123f"})
 	}
 
 	private void sendMessage(ProtocolMessage message) throws IOException {
