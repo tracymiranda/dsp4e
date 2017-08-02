@@ -4,23 +4,34 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.InitializedEvent;
+import org.eclipse.dsp4j.DebugProtocol.ProtocolMessage;
+import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
+import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class TestCode {
 
-//	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
-//	private	static final String NODE_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
+	// private static final String NODE_DEBUG_CMD =
+	// "/scratch/node/node-v6.11.0-linux-x64/bin/node";
+	// private static final String NODE_DEBUG_ARG =
+	// "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
 
-	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
-	private	static final String NODE_DEBUG_ARG = "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
-	
+	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
+	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
 	private static final String CONTENT_LENGTH = "Content-Length: ";
+
+	private OutputStreamWriter writer;
+	private BufferedReader reader;
+	private Gson gson;
 
 	/**
 	 *
@@ -30,6 +41,7 @@ public class TestCode {
 	"arguments":{
 	 "clientID":"vscode",
 	 "adapterID":"mock",
+	 
 	 "pathFormat":"path",
 	 "linesStartAt1":true,
 	 "columnsStartAt1":true,
@@ -41,10 +53,37 @@ public class TestCode {
 	"seq":1
 	}
 	 * </pre>
+	 * 
 	 * @throws IOException
 	 *
 	 */
+	
+	/**
+	 * 
+	 * <pre>
+	 * {
+	 * "command":"setbreakpoint",
+	 * "ClientID":"vscode",
+	 * "adapterID":"mock",
+	 * 
+	 * "pathFormat":"path",
+	 * "linesStartAt1":true,
+	 * "columnsStartAt1":true,
+	 * "supportsVariableType":true,
+	 * "supportsVariablePaging":true,
+	 * "supportsRunInTerminalRequest":true
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
+
 	public static void main(String[] args) throws IOException {
+		new TestCode().main();
+
+	}
+
+	public void main() throws IOException {
+
 		InitializeRequest initialize = new InitializeRequest();
 		initialize.command = "initialize";
 		initialize.arguments = new InitializeRequestArguments();
@@ -59,20 +98,41 @@ public class TestCode {
 		initialize.type = "request";
 		initialize.seq = 1;
 
+		SetBreakpointsRequest breakpoint = new SetBreakpointsRequest();
+		breakpoint.command = "setbreakpoint";
+		breakpoint.arguments = new SetBreakpointsArguments();
+		breakpoint.arguments.source = "Source" ;
+		breakpoint.arguments.breakpoints = "breakpoints";
+		breakpoint.arguments.lines = "lines";
+		breakpoint.arguments.sourceModified = false;
+		
 		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		String initializeString = gson.toJson(initialize);
-
+		gson = builder.create();
 
 		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, NODE_DEBUG_ARG);
 		Process process = processBuilder.start();
-		OutputStreamWriter writer = new OutputStreamWriter(process.getOutputStream());
-		writer.write(CONTENT_LENGTH + initializeString.length() + "\r\n\r\n");
-		writer.write(initializeString);
-		System.out.println("Sent: " + initializeString);
-		System.out.println("As object: " + initialize);
+		writer = new OutputStreamWriter(process.getOutputStream());
+		reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+	
+		sendMessage(initialize);
+		InitializedEvent initialized = recvMessage(InitializedEvent.class);
+		
+		sendMessage(breakpoint);
+		SetBreakpointsRequest Breakpoint = recvMessage(SetBreakpointsRequest.class);
+		Breakpoint = recvMessage(SetBreakpointsRequest.class);
+	}
+
+	private void sendMessage(ProtocolMessage message) throws IOException {
+		String messageJson = gson.toJson(message);
+		writer.write(CONTENT_LENGTH + messageJson.length() + "\r\n\r\n");
+		writer.write(messageJson);
+		System.out.println("Sent: " + messageJson);
+		System.out.println("As object: " + message);
 		writer.flush();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+	}
+
+	private <T> T recvMessage(Class<T> messageClasss) throws IOException {
 		String contentLength;
 		while ((contentLength = reader.readLine()) != null) {
 			if (contentLength.startsWith(CONTENT_LENGTH)) {
@@ -83,14 +143,16 @@ public class TestCode {
 					char[] data = new char[length];
 					int nRead = reader.read(data);
 					if (nRead == length) {
-						String content = new String(data);
-						System.out.println("Received: " + content);
-						InitializedEvent result = gson.fromJson(content, InitializedEvent.class);
+						String contentJson = new String(data);
+						T result = gson.fromJson(contentJson, messageClasss);
+						System.out.println("Received: " + contentJson);
 						System.out.println("As object: " + result);
+						return result;
 					}
 				}
- 			}
+			}
 		}
+		throw new IOException("No messages read");
 	}
 
 }

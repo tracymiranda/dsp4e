@@ -496,11 +496,11 @@ public class DebugProtocol {
 		 * The source location of the breakpoints; either source.path or
 		 * source.reference must be specified.
 		 */
-		public Source source;
+		public String source;
 		/** The code locations of the breakpoints. */
-		public SourceBreakpoint[] breakpoints;
+		public String breakpoints;
 		/** Deprecated: The code locations of the breakpoints. */
-		public int[] lines;
+		public String lines;
 		/**
 		 * A value of true indicates that the underlying source has been modified which
 		 * results in new breakpoint locations.
