@@ -11,6 +11,8 @@ import org.eclipse.dsp4j.DebugProtocol.InitializedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ProtocolMessage;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsRequest;
+import org.eclipse.dsp4j.DebugProtocol.Source;
+import org.eclipse.dsp4j.DebugProtocol.SourceBreakpoint;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +26,10 @@ public class TestCode {
 
 	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
 	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
+//	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
+//	private static final String NODE_DEBUG_ARG = "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+
+	
 	private static final String CONTENT_LENGTH = "Content-Length: ";
 
 	private OutputStreamWriter writer;
@@ -96,12 +102,17 @@ public class TestCode {
 		initialize.seq = 1;
 
 		SetBreakpointsRequest breakpoint = new SetBreakpointsRequest();
-		breakpoint.command = "setbreakpoint";
+		breakpoint.command = "setBreakpoints";
 		breakpoint.arguments = new SetBreakpointsArguments();
-		breakpoint.arguments.source = "Source" ;
-		breakpoint.arguments.breakpoints = "breakpoints";
-		breakpoint.arguments.lines = "lines";
+		breakpoint.arguments.source = new Source();
+		breakpoint.arguments.source.path = "c:\\data\\Projects\\mockdebug\\Readme.md";
+		breakpoint.arguments.source.name = "Readme.md" ;
+		breakpoint.arguments.breakpoints = new SourceBreakpoint();
+		breakpoint.arguments.breakpoints.line = 1;
+		breakpoint.arguments.lines = new int[] {1};
 		breakpoint.arguments.sourceModified = false;
+		breakpoint.type = "request";
+		breakpoint.seq = 2;
 		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.create();
@@ -116,8 +127,8 @@ public class TestCode {
 		InitializedEvent initialized = recvMessage(InitializedEvent.class);
 		
 		sendMessage(breakpoint);
-		SetBreakpointsRequest Breakpoint = recvMessage(SetBreakpointsRequest.class);
-		Breakpoint = recvMessage(SetBreakpointsRequest.class);
+		recvMessage(SetBreakpointsRequest.class);
+		recvMessage(SetBreakpointsRequest.class);
 	}
 
 	private void sendMessage(ProtocolMessage message) throws IOException {
