@@ -7,6 +7,9 @@ import java.io.OutputStreamWriter;
 
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
+import org.eclipse.dsp4j.DebugProtocol.LaunchRequest;
+import org.eclipse.dsp4j.DebugProtocol.LaunchRequestArguments;
+import org.eclipse.dsp4j.DebugProtocol.LaunchResponse;
 import org.eclipse.dsp4j.DebugProtocol.ProtocolMessage;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsRequest;
@@ -114,6 +117,18 @@ public class TestCode {
 		breakpoint.type = "request";
 		breakpoint.seq = 2;
 		
+		LaunchRequest launch = new LaunchRequest();
+		launch.command = "LaunchRequest";
+		launch.arguments = new LaunchRequestArguments();
+		launch.arguments.type = "mock"; 
+		launch.arguments.request = "launch";
+		launch.arguments.name = "mock debug";
+		launch.arguments.program = new Source();
+		launch.arguments.program.path = "c:\\\\data\\\\Projects\\\\mockdebug/readme.md";
+		launch.arguments.stopOnEntry = true;
+		launch.arguments.trace = true;		
+		launch.seq = 3;
+		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.create();
 
@@ -130,6 +145,8 @@ public class TestCode {
 		sendMessage(breakpoint);
 		recvMessage(SetBreakpointsResponse.class); //receive setBreakpoint request
 		
+		sendMessage (launch);
+		recvMessage(LaunchResponse.class);
 		//Next we try a launch
 		//launch({"type":"mock","request":"launch","name":"Mock Debug","program":"c:\\data\\Projects\\mockdebug/readme.md","stopOnEntry":true,"trace":true,"__sessionId":"ef06af99-c5f3-4fc6-8705-b96161c2123f"})
 	}
