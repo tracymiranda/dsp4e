@@ -93,7 +93,7 @@ public class TestCode {
 		breakpoint.command = "setBreakpoints";
 		breakpoint.arguments = new SetBreakpointsArguments();
 		breakpoint.arguments.source = new Source();
-		breakpoint.arguments.source.path = "c:\\data\\Projects\\mockdebug\\Readme.md";
+		breakpoint.arguments.source.path = "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md";
 		breakpoint.arguments.source.name = "Readme.md";
 		breakpoint.arguments.breakpoints = new SourceBreakpoint();
 		breakpoint.arguments.breakpoints.line = 1;
@@ -108,8 +108,7 @@ public class TestCode {
 		launch.arguments.type = "mock";
 		launch.arguments.request = "launch";
 		launch.arguments.name = "Mock Debug";
-		launch.arguments.program = new Source();
-		launch.arguments.program.path = "c:\\data\\Projects\\mockdebug\\Readme.md";
+		launch.arguments.program = "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md";
 		launch.arguments.stopOnEntry = true;
 		launch.arguments.trace = true;
 		launch.arguments.noDebug = false;
@@ -138,9 +137,41 @@ public class TestCode {
 
 		sendMessage(launch);
 		recvMessage(ProtocolMessage.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
+		recvMessage(Object.class);
 
-		sendMessage(disconnect);
-		recvMessage(DisconnectResponse.class);
+//		sendMessage(disconnect);
+//		recvMessage(DisconnectResponse.class);
 	}
 
 	private void sendMessage(ProtocolMessage message) throws IOException {
