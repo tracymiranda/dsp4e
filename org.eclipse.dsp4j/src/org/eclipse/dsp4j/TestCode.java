@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
+import org.eclipse.dsp4j.DebugProtocol.DisconnectRequest;
+import org.eclipse.dsp4j.DebugProtocol.DisconnectResponse;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequest;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.LaunchRequest;
@@ -29,10 +32,11 @@ public class TestCode {
 
 	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
 	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
-//	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
-//	private static final String NODE_DEBUG_ARG = "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+	// private static final String NODE_DEBUG_CMD = "C:\\Program
+	// Files\\nodejs\\node.exe";
+	// private static final String NODE_DEBUG_ARG =
+	// "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
-	
 	private static final String CONTENT_LENGTH = "Content-Length: ";
 
 	private OutputStreamWriter writer;
@@ -63,25 +67,6 @@ public class TestCode {
 	 * @throws IOException
 	 *
 	 */
-	
-	/**
-	 * 
-	 * <pre>
-	 * {
-	 * "command":"setbreakpoint",
-	 * "ClientID":"vscode",
-	 * "adapterID":"mock",
-	 * 
-	 * "pathFormat":"path",
-	 * "linesStartAt1":true,
-	 * "columnsStartAt1":true,
-	 * "supportsVariableType":true,
-	 * "supportsVariablePaging":true,
-	 * "supportsRunInTerminalRequest":true
-	 * 
-	 * @param args
-	 * @throws IOException
-	 */
 
 	public static void main(String[] args) throws IOException {
 		new TestCode().main();
@@ -109,26 +94,33 @@ public class TestCode {
 		breakpoint.arguments = new SetBreakpointsArguments();
 		breakpoint.arguments.source = new Source();
 		breakpoint.arguments.source.path = "c:\\data\\Projects\\mockdebug\\Readme.md";
-		breakpoint.arguments.source.name = "Readme.md" ;
+		breakpoint.arguments.source.name = "Readme.md";
 		breakpoint.arguments.breakpoints = new SourceBreakpoint();
 		breakpoint.arguments.breakpoints.line = 1;
-		breakpoint.arguments.lines = new int[] {1};
+		breakpoint.arguments.lines = new int[] { 1 };
 		breakpoint.arguments.sourceModified = false;
 		breakpoint.type = "request";
 		breakpoint.seq = 2;
-		
+
 		LaunchRequest launch = new LaunchRequest();
-		launch.command = "LaunchRequest";
+		launch.command = "launch";
 		launch.arguments = new LaunchRequestArguments();
-		launch.arguments.type = "mock"; 
+		launch.arguments.type = "mock";
 		launch.arguments.request = "launch";
-		launch.arguments.name = "mock debug";
+		launch.arguments.name = "Mock Debug";
 		launch.arguments.program = new Source();
-		launch.arguments.program.path = "c:\\\\data\\\\Projects\\\\mockdebug/readme.md";
+		launch.arguments.program.path = "c:\\data\\Projects\\mockdebug\\Readme.md";
 		launch.arguments.stopOnEntry = true;
-		launch.arguments.trace = true;		
+		launch.arguments.trace = true;
+		launch.arguments.noDebug = false;
+		launch.type = "request";
 		launch.seq = 3;
-		
+
+		DisconnectRequest disconnect = new DisconnectRequest();
+		disconnect.command = "disconnect";
+		disconnect.arguments = new DisconnectArguments();
+		disconnect.arguments.terminateDebuggee = true;
+
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.create();
 
@@ -137,18 +129,18 @@ public class TestCode {
 		writer = new OutputStreamWriter(process.getOutputStream());
 		reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-	
 		sendMessage(initialize);
-		recvMessage(InitializeRequest.class); //receive initialize event
-		recvMessage(SetBreakpointsRequest.class); //receive initialize response
-		
+		recvMessage(InitializeRequest.class); // receive initialize event
+		recvMessage(SetBreakpointsRequest.class); // receive initialize response
+
 		sendMessage(breakpoint);
-		recvMessage(SetBreakpointsResponse.class); //receive setBreakpoint request
-		
-		sendMessage (launch);
-		recvMessage(LaunchResponse.class);
-		//Next we try a launch
-		//launch({"type":"mock","request":"launch","name":"Mock Debug","program":"c:\\data\\Projects\\mockdebug/readme.md","stopOnEntry":true,"trace":true,"__sessionId":"ef06af99-c5f3-4fc6-8705-b96161c2123f"})
+		recvMessage(SetBreakpointsResponse.class); // receive setBreakpoint request
+
+		sendMessage(launch);
+		recvMessage(ProtocolMessage.class);
+
+		sendMessage(disconnect);
+		recvMessage(DisconnectResponse.class);
 	}
 
 	private void sendMessage(ProtocolMessage message) throws IOException {
