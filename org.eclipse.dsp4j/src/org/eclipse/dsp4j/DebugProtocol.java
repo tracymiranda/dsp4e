@@ -396,12 +396,6 @@ public class DebugProtocol {
 		 * If noDebug is true the launch request should launch the program without
 		 * enabling debugging.
 		 */
-		public String type;
-		public String request;
-		public String name;
-		public Source program;
-		public boolean stopOnEntry;
-		public boolean trace;
 		public boolean noDebug;
 	}
 
