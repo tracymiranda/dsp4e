@@ -82,26 +82,11 @@ public class TestUsingIntefaces {
 		Future<?> listening = debugProtocolLauncher.startListening();
 		IDebugProtocolServer debugProtocolServer = debugProtocolLauncher.getRemoteProxy();
 
-		InitializeRequestArguments initializeArgs = new InitializeRequestArguments();
-		initializeArgs.clientID = "vscode";
-		initializeArgs.adapterID = "mock";
-		initializeArgs.pathFormat = "path";
-		initializeArgs.linesStartAt1 = true;
-		initializeArgs.columnsStartAt1 = true;
-		initializeArgs.supportsVariableType = true;
-		initializeArgs.supportsVariablePaging = true;
-		initializeArgs.supportsRunInTerminalRequest = true;
-		getAndPrint(debugProtocolServer.initialize(initializeArgs));
+		getAndPrint(debugProtocolServer.initialize(
+				new InitializeRequestArguments().setClientID("test").setAdapterID("mock").setPathFormat("path")));
 
-		SetBreakpointsArguments setBreakpointsArgs = new SetBreakpointsArguments();
-		setBreakpointsArgs.source = new Source();
-		setBreakpointsArgs.source.path = "D:\\debug\\mockdebug\\Readme.md";
-		setBreakpointsArgs.source.name = "Readme.md";
-		setBreakpointsArgs.breakpoints = new SourceBreakpoint[] {new SourceBreakpoint()};
-		setBreakpointsArgs.breakpoints[0].line = 1;
-		setBreakpointsArgs.lines = new int[] { 1 };
-		setBreakpointsArgs.sourceModified = false;
-		getAndPrint(debugProtocolServer.setBreakpoints(setBreakpointsArgs));
+		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
+				.setSource(new Source().setPath("D:\\debug\\mockdebug\\Readme.md").setName("Readme.md"))));
 
 		Map<String, Object> launchArguments = new HashMap<>();
 		launchArguments.put("type", "mock");
