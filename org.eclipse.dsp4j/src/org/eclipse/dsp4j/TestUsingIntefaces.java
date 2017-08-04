@@ -14,8 +14,8 @@ import org.eclipse.dsp4j.DebugProtocol.OutputEvent;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsResponse;
 import org.eclipse.dsp4j.DebugProtocol.Source;
-import org.eclipse.dsp4j.DebugProtocol.SourceBreakpoint;
 import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
+import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse;
 import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
@@ -28,9 +28,8 @@ public class TestUsingIntefaces {
 	// "/scratch/node/node-v6.11.0-linux-x64/bin/node";
 	// private static final String NODE_DEBUG_ARG =
 	// "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
-
-	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
-	private static final String NODE_DEBUG_ARG = "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
+	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
 
 	public static interface IDebugProtocolServer {
 		@JsonRequest
@@ -41,18 +40,24 @@ public class TestUsingIntefaces {
 
 		@JsonRequest
 		CompletableFuture<Void> launch(Either<Map<String, Object>, LaunchRequestArguments> launchArguments);
+
+		@JsonRequest
+		CompletableFuture<Void> configurationDone();
+
+		@JsonRequest
+		CompletableFuture<ThreadsResponse.Body> threads();
 	}
 
 	public static interface IDebugProtocolClient {
 
 		@JsonNotification
 		default void initialized() {
-			// System.out.println("initialized");
+			System.out.println("initialized");
 		};
 
 		@JsonNotification
 		default void output(OutputEvent.Body body) {
-			// System.out.println("output body");
+			System.out.println("output body" + body.output);
 		}
 
 		@JsonNotification
@@ -68,11 +73,10 @@ public class TestUsingIntefaces {
 	public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
 		new TestUsingIntefaces().test();
 	}
-	
+
 	@Test
 	public void test() throws IOException, InterruptedException, ExecutionException {
-			
-		
+
 		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, NODE_DEBUG_ARG);
 		Process process = processBuilder.start();
 		DebugLauncher<IDebugProtocolServer> debugProtocolLauncher = DebugLauncher.createLauncher(
@@ -85,20 +89,26 @@ public class TestUsingIntefaces {
 		getAndPrint(debugProtocolServer.initialize(
 				new InitializeRequestArguments().setClientID("test").setAdapterID("mock").setPathFormat("path")));
 
-		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
-				.setSource(new Source().setPath("D:\\debug\\mockdebug\\Readme.md").setName("Readme.md"))));
+		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments().setSource(
+				new Source().setPath("C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md").setName("Readme.md"))));
+
+		getAndPrint(debugProtocolServer.configurationDone());
+
+		getAndPrint(debugProtocolServer.threads());	
+
+//		 getAndPrint(debugProtocolServer.launch(new launchArguments().type("mock").request("launch").name("MockDebug").program("C:\\\\Users\\\\artke\\\\Desktop\\\\Debug\\\\dsp4e\\\\README.md")
+//		 .stopOnEntry(true).trace(true).noDebug(false)));
 
 		Map<String, Object> launchArguments = new HashMap<>();
 		launchArguments.put("type", "mock");
 		launchArguments.put("request", "launch");
 		launchArguments.put("name", "Mock Debug");
-		launchArguments.put("program", "D:\\debug\\mockdebug\\Readme.md");
+		launchArguments.put("program", "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md");
 		launchArguments.put("stopOnEntry", true);
-		launchArguments.put("trace", false);
+		launchArguments.put("trace", true);
 		launchArguments.put("noDebug", false);
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
-		
-		
+
 		process.destroy();
 		listening.cancel(true);
 	}
@@ -108,7 +118,7 @@ public class TestUsingIntefaces {
 			System.out.println(future.get());
 		} catch (InterruptedException | ExecutionException e) {
 			String message = e.getMessage();
-			String lines[] = message.split("\\r?\\n");
+			String lines[] = message.split("\\r\\n");
 			System.err.println(lines[0]);
 		}
 	}

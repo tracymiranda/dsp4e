@@ -145,8 +145,6 @@ public class TestCode {
 		sendMessage(breakpoint);
 		recvMessage(SetBreakpointsResponse.class); // receive setBreakpoint request
 		
-		sendMessage(config);
-		recvMessage(ConfigurationDoneResponse.class);
 		
 		sendMessage(launch);
 		recvMessage(ProtocolMessage.class);
