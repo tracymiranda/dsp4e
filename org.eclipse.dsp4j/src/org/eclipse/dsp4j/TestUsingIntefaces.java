@@ -97,8 +97,8 @@ public class TestUsingIntefaces {
 		setBreakpointsArgs.source = new Source();
 		setBreakpointsArgs.source.path = "D:\\debug\\mockdebug\\Readme.md";
 		setBreakpointsArgs.source.name = "Readme.md";
-		setBreakpointsArgs.breakpoints = new SourceBreakpoint();
-		setBreakpointsArgs.breakpoints.line = 1;
+		setBreakpointsArgs.breakpoints = new SourceBreakpoint[] {new SourceBreakpoint()};
+		setBreakpointsArgs.breakpoints[0].line = 1;
 		setBreakpointsArgs.lines = new int[] { 1 };
 		setBreakpointsArgs.sourceModified = false;
 		getAndPrint(debugProtocolServer.setBreakpoints(setBreakpointsArgs));
