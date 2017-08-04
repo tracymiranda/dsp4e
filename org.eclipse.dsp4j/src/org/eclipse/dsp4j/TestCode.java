@@ -7,6 +7,9 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.dsp4j.DebugProtocol.ConfigurationDoneArguments;
+import org.eclipse.dsp4j.DebugProtocol.ConfigurationDoneRequest;
+import org.eclipse.dsp4j.DebugProtocol.ConfigurationDoneResponse;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectRequest;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectResponse;
@@ -123,6 +126,10 @@ public class TestCode {
 		disconnect.arguments = new DisconnectArguments();
 		disconnect.arguments.terminateDebuggee = true;
 
+		ConfigurationDoneRequest config = new ConfigurationDoneRequest();
+		config.command = "Configuration";
+		config.arguments = new ConfigurationDoneArguments();
+		
 		GsonBuilder builder = new GsonBuilder();
 		gson = builder.create();
 
@@ -137,7 +144,10 @@ public class TestCode {
 
 		sendMessage(breakpoint);
 		recvMessage(SetBreakpointsResponse.class); // receive setBreakpoint request
-
+		
+		sendMessage(config);
+		recvMessage(ConfigurationDoneResponse.class);
+		
 		sendMessage(launch);
 		recvMessage(ProtocolMessage.class);
 		recvMessage(Object.class);
@@ -152,27 +162,7 @@ public class TestCode {
 		recvMessage(Object.class);
 		recvMessage(Object.class);
 		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-		recvMessage(Object.class);
-
+		
 //		sendMessage(disconnect);
 //		recvMessage(DisconnectResponse.class);
 	}
