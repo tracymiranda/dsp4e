@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectRequest;
@@ -104,14 +106,15 @@ public class TestCode {
 
 		LaunchRequest launch = new LaunchRequest();
 		launch.command = "launch";
-		launch.arguments = new LaunchRequestArguments();
-		launch.arguments.type = "mock";
-		launch.arguments.request = "launch";
-		launch.arguments.name = "Mock Debug";
-		launch.arguments.program = "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md";
-		launch.arguments.stopOnEntry = true;
-		launch.arguments.trace = true;
-		launch.arguments.noDebug = false;
+		Map<String, Object> launchArguments = new HashMap<>();
+		launchArguments.put("type", "mock");
+		launchArguments.put("request", "launch");
+		launchArguments.put("name", "Mock Debug");
+		launchArguments.put("program", "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md");
+		launchArguments.put("stopOnEntry", true);
+		launchArguments.put("trace", false);
+		launchArguments.put("noDebug", false);
+		launch.arguments = launchArguments;
 		launch.type = "request";
 		launch.seq = 3;
 

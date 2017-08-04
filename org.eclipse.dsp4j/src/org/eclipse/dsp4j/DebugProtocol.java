@@ -387,7 +387,7 @@ public class DebugProtocol {
 	/** Launch request; value of command field is 'launch'. */
 	public static class LaunchRequest extends Request {
 		public String command;
-		public LaunchRequestArguments arguments;
+		public /* one of Map | LaunchRequestArguments */ Object arguments;
 	}
 
 	/** Arguments for 'launch' request. */
@@ -396,12 +396,6 @@ public class DebugProtocol {
 		 * If noDebug is true the launch request should launch the program without
 		 * enabling debugging.
 		 */
-		public String type;
-		public String request;
-		public String name;
-		public String program;
-		public boolean stopOnEntry;
-		public boolean trace;
 		public boolean noDebug;
 	}
 
