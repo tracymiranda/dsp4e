@@ -16,6 +16,8 @@ import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsResponse;
 import org.eclipse.dsp4j.DebugProtocol.Source;
 import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse;
+import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
+import org.eclipse.dsp4j.DebugProtocol.VariablesResponse;
 import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
@@ -46,6 +48,9 @@ public class TestUsingIntefaces {
 
 		@JsonRequest
 		CompletableFuture<ThreadsResponse.Body> threads();
+		
+		@JsonRequest
+		CompletableFuture<VariablesResponse.Body> variables(VariablesArguments variablesArguments);
 	}
 
 	public static interface IDebugProtocolClient {
@@ -95,10 +100,7 @@ public class TestUsingIntefaces {
 		getAndPrint(debugProtocolServer.configurationDone());
 
 		getAndPrint(debugProtocolServer.threads());	
-
-//		 getAndPrint(debugProtocolServer.launch(new launchArguments().type("mock").request("launch").name("MockDebug").program("C:\\\\Users\\\\artke\\\\Desktop\\\\Debug\\\\dsp4e\\\\README.md")
-//		 .stopOnEntry(true).trace(true).noDebug(false)));
-
+		
 		Map<String, Object> launchArguments = new HashMap<>();
 		launchArguments.put("type", "mock");
 		launchArguments.put("request", "launch");
@@ -109,6 +111,8 @@ public class TestUsingIntefaces {
 		launchArguments.put("noDebug", false);
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
 
+		getAndPrint(debugProtocolServer.variables(new VariablesArguments().setVariablesReference(1000)));
+		
 		process.destroy();
 		listening.cancel(true);
 	}
