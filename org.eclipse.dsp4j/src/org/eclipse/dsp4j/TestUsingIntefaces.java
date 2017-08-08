@@ -10,10 +10,13 @@ import java.util.concurrent.Future;
 import org.eclipse.dsp4j.DebugProtocol.Capabilities;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.LaunchRequestArguments;
+import org.eclipse.dsp4j.DebugProtocol.NextArguments;
 import org.eclipse.dsp4j.DebugProtocol.OutputEvent;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsResponse;
 import org.eclipse.dsp4j.DebugProtocol.Source;
+import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
+import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse;
 import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse;
 import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
@@ -51,6 +54,12 @@ public class TestUsingIntefaces {
 		
 		@JsonRequest
 		CompletableFuture<VariablesResponse.Body> variables(VariablesArguments variablesArguments);
+		
+		@JsonRequest
+		CompletableFuture<Void> next(NextArguments nextArguments);
+		
+		@JsonRequest
+		CompletableFuture<StackTraceResponse.Body> stackTrace(StackTraceArguments stackTraceArguments);
 	}
 
 	public static interface IDebugProtocolClient {
@@ -113,6 +122,20 @@ public class TestUsingIntefaces {
 
 		getAndPrint(debugProtocolServer.variables(new VariablesArguments().setVariablesReference(1000)));
 		
+		getAndPrint(debugProtocolServer.threads());	
+
+		getAndPrint(debugProtocolServer.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20)));	
+		
+		getAndPrint(debugProtocolServer.variables(new VariablesArguments().setVariablesReference(1001)));
+
+		getAndPrint(debugProtocolServer.next(new NextArguments().setThreadId(1)));
+		
+		getAndPrint(debugProtocolServer.variables(new VariablesArguments().setVariablesReference(1003)));
+
+		getAndPrint(debugProtocolServer.threads());	
+
+		getAndPrint(debugProtocolServer.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20)));	
+
 		process.destroy();
 		listening.cancel(true);
 	}
