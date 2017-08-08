@@ -5,6 +5,7 @@
 
 package org.eclipse.dsp4j;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /** Declaration module describing the VS Code debug protocol.
@@ -746,7 +747,7 @@ public class DebugProtocol {
 				+ "kind=" + kind
 				+ ", title=" + title
 				+ ", cwd=" + cwd
-				+ ", args=" + args
+				+ ", args=" + Arrays.toString(args)
 				+ ", env=" + env
 			 + "]";
 		}
@@ -1227,8 +1228,8 @@ public class DebugProtocol {
 		public String toString() {
 			return "SetBreakpointsArguments ["
 				+ "source=" + source
-				+ ", breakpoints=" + breakpoints
-				+ ", lines=" + lines
+				+ ", breakpoints=" + Arrays.toString(breakpoints)
+				+ ", lines=" + Arrays.toString(lines)
 				+ ", sourceModified=" + sourceModified
 			 + "]";
 		}
@@ -1252,7 +1253,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "breakpoints=" + breakpoints
+					+ "breakpoints=" + Arrays.toString(breakpoints)
 				 + "]";
 			}
 		};
@@ -1310,7 +1311,7 @@ public class DebugProtocol {
 		@Override
 		public String toString() {
 			return "SetFunctionBreakpointsArguments ["
-				+ "breakpoints=" + breakpoints
+				+ "breakpoints=" + Arrays.toString(breakpoints)
 			 + "]";
 		}
 	}
@@ -1330,7 +1331,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "breakpoints=" + breakpoints
+					+ "breakpoints=" + Arrays.toString(breakpoints)
 				 + "]";
 			}
 		};
@@ -1393,8 +1394,8 @@ public class DebugProtocol {
 		@Override
 		public String toString() {
 			return "SetExceptionBreakpointsArguments ["
-				+ "filters=" + filters
-				+ ", exceptionOptions=" + exceptionOptions
+				+ "filters=" + Arrays.toString(filters)
+				+ ", exceptionOptions=" + Arrays.toString(exceptionOptions)
 			 + "]";
 		}
 	}
@@ -2005,7 +2006,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "stackFrames=" + stackFrames
+					+ "stackFrames=" + Arrays.toString(stackFrames)
 					+ ", totalFrames=" + totalFrames
 				 + "]";
 			}
@@ -2080,7 +2081,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "scopes=" + scopes
+					+ "scopes=" + Arrays.toString(scopes)
 				 + "]";
 			}
 		};
@@ -2187,7 +2188,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "variables=" + variables
+					+ "variables=" + Arrays.toString(variables)
 				 + "]";
 			}
 		};
@@ -2461,7 +2462,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "threads=" + threads
+					+ "threads=" + Arrays.toString(threads)
 				 + "]";
 			}
 		};
@@ -2548,7 +2549,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "modules=" + modules
+					+ "modules=" + Arrays.toString(modules)
 					+ ", totalModules=" + totalModules
 				 + "]";
 			}
@@ -2760,7 +2761,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "targets=" + targets
+					+ "targets=" + Arrays.toString(targets)
 				 + "]";
 			}
 		};
@@ -2852,7 +2853,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "targets=" + targets
+					+ "targets=" + Arrays.toString(targets)
 				 + "]";
 			}
 		};
@@ -2951,7 +2952,7 @@ public class DebugProtocol {
 			@Override
 			public String toString() {
 				return "Body ["
-					+ "targets=" + targets
+					+ "targets=" + Arrays.toString(targets)
 				 + "]";
 			}
 		};
@@ -3225,7 +3226,7 @@ public class DebugProtocol {
 				+ ", supportsConditionalBreakpoints=" + supportsConditionalBreakpoints
 				+ ", supportsHitConditionalBreakpoints=" + supportsHitConditionalBreakpoints
 				+ ", supportsEvaluateForHovers=" + supportsEvaluateForHovers
-				+ ", exceptionBreakpointFilters=" + exceptionBreakpointFilters
+				+ ", exceptionBreakpointFilters=" + Arrays.toString(exceptionBreakpointFilters)
 				+ ", supportsStepBack=" + supportsStepBack
 				+ ", supportsSetVariable=" + supportsSetVariable
 				+ ", supportsRestartFrame=" + supportsRestartFrame
@@ -3233,8 +3234,8 @@ public class DebugProtocol {
 				+ ", supportsStepInTargetsRequest=" + supportsStepInTargetsRequest
 				+ ", supportsCompletionsRequest=" + supportsCompletionsRequest
 				+ ", supportsModulesRequest=" + supportsModulesRequest
-				+ ", additionalModuleColumns=" + additionalModuleColumns
-				+ ", supportedChecksumAlgorithms=" + supportedChecksumAlgorithms
+				+ ", additionalModuleColumns=" + Arrays.toString(additionalModuleColumns)
+				+ ", supportedChecksumAlgorithms=" + Arrays.toString(supportedChecksumAlgorithms)
 				+ ", supportsRestartRequest=" + supportsRestartRequest
 				+ ", supportsExceptionOptions=" + supportsExceptionOptions
 				+ ", supportsValueFormattingOptions=" + supportsValueFormattingOptions
@@ -3273,7 +3274,7 @@ public class DebugProtocol {
 			return "ExceptionBreakpointsFilter ["
 				+ "filter=" + filter
 				+ ", label=" + label
-				+ ", default_=" + default_
+				+ ", default=" + default_
 			 + "]";
 		}
 	}
@@ -3510,7 +3511,7 @@ public class DebugProtocol {
 		@Override
 		public String toString() {
 			return "ModulesViewDescriptor ["
-				+ "columns=" + columns
+				+ "columns=" + Arrays.toString(columns)
 			 + "]";
 		}
 	}
@@ -3600,7 +3601,7 @@ public class DebugProtocol {
 				+ ", presentationHint=" + presentationHint
 				+ ", origin=" + origin
 				+ ", adapterData=" + adapterData
-				+ ", checksums=" + checksums
+				+ ", checksums=" + Arrays.toString(checksums)
 			 + "]";
 		}
 	}
@@ -4278,7 +4279,7 @@ public class DebugProtocol {
 		@Override
 		public String toString() {
 			return "ExceptionOptions ["
-				+ "path=" + path
+				+ "path=" + Arrays.toString(path)
 				+ ", breakMode=" + breakMode
 			 + "]";
 		}
@@ -4312,7 +4313,7 @@ public class DebugProtocol {
 		public String toString() {
 			return "ExceptionPathSegment ["
 				+ "negate=" + negate
-				+ ", names=" + names
+				+ ", names=" + Arrays.toString(names)
 			 + "]";
 		}
 	}
@@ -4369,7 +4370,7 @@ public class DebugProtocol {
 				+ ", fullTypeName=" + fullTypeName
 				+ ", evaluateName=" + evaluateName
 				+ ", stackTrace=" + stackTrace
-				+ ", innerException=" + innerException
+				+ ", innerException=" + Arrays.toString(innerException)
 			 + "]";
 		}
 	}
