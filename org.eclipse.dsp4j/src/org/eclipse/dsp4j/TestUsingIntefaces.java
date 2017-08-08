@@ -7,24 +7,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.eclipse.dsp4j.DebugProtocol.Capabilities;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
-import org.eclipse.dsp4j.DebugProtocol.LaunchRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.NextArguments;
-import org.eclipse.dsp4j.DebugProtocol.OutputEvent;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
-import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsResponse;
 import org.eclipse.dsp4j.DebugProtocol.Source;
 import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
-import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse;
-import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
-import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse;
 import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
-import org.eclipse.dsp4j.DebugProtocol.VariablesResponse;
 import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
-import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.junit.Test;
 
 public class TestUsingIntefaces {
@@ -35,51 +25,6 @@ public class TestUsingIntefaces {
 	// "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
 	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
 	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
-
-	public static interface IDebugProtocolServer {
-		@JsonRequest
-		CompletableFuture<Capabilities> initialize(InitializeRequestArguments param);
-
-		@JsonRequest
-		CompletableFuture<SetBreakpointsResponse.Body> setBreakpoints(SetBreakpointsArguments setBreakpointsArgs);
-
-		@JsonRequest
-		CompletableFuture<Void> launch(Either<Map<String, Object>, LaunchRequestArguments> launchArguments);
-
-		@JsonRequest
-		CompletableFuture<Void> configurationDone();
-
-		@JsonRequest
-		CompletableFuture<ThreadsResponse.Body> threads();
-		
-		@JsonRequest
-		CompletableFuture<VariablesResponse.Body> variables(VariablesArguments variablesArguments);
-		
-		@JsonRequest
-		CompletableFuture<Void> next(NextArguments nextArguments);
-		
-		@JsonRequest
-		CompletableFuture<StackTraceResponse.Body> stackTrace(StackTraceArguments stackTraceArguments);
-	}
-
-	public static interface IDebugProtocolClient {
-
-		@JsonNotification
-		default void initialized() {
-			System.out.println("initialized");
-		};
-
-		@JsonNotification
-		default void output(OutputEvent.Body body) {
-			System.out.println("output body" + body.output);
-		}
-
-		@JsonNotification
-		default void stopped(StoppedEvent.Body body) {
-			System.out.println("stopped: " + body);
-		}
-
-	}
 
 	public static class DebugProtocolClient implements IDebugProtocolClient {
 	}
