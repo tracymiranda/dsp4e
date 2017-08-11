@@ -1,5 +1,8 @@
 package org.eclipse.dsp43.example.readme.debugmodel;
 
+import java.util.concurrent.CompletableFuture;
+
+import org.eclipse.cdt.internal.core.model.Variable;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -7,6 +10,9 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
+import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
+import org.eclipse.dsp4j.IDebugProtocolServer;
 
 final class StackFrame implements IStackFrame {
 	/**
@@ -153,7 +159,12 @@ final class StackFrame implements IStackFrame {
 	@Override
 	public IVariable[] getVariables() throws DebugException {
 		// TODO Auto-generated method stub
-		return null;
+		IVariable[] myArr = new IVariable[2];
+		DebugVariable debugVariable = new DebugVariable("Art");
+		DebugVariable debugVariable2 = new DebugVariable("KC");
+		myArr[1] = debugVariable2;
+		myArr[0] = debugVariable;
+		return myArr;
 	}
 
 	@Override

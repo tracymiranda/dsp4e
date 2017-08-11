@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.NextArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
@@ -81,6 +82,8 @@ public class TestUsingIntefaces {
 
 		getAndPrint(debugProtocolServer.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20)));	
 
+		getAndPrint(debugProtocolServer.disconnect(new DisconnectArguments()));
+		
 		process.destroy();
 		listening.cancel(true);
 	}

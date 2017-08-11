@@ -15,8 +15,13 @@ import org.eclipse.dsp43.example.readme.debugmodel.ReadmeDebugTarget;
 import org.eclipse.dsp4e.example.readme.Activator;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
-	private static final String NODE_DEBUG_CMD = "C:\\Program Files\\nodejs\\node.exe";
-	private static final String NODE_DEBUG_ARG = "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+	// private static final String NODE_DEBUG_CMD = "C:\\Program
+	// Files\\nodejs\\node.exe";
+	// private static final String NODE_DEBUG_ARG =
+	// "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
+
+	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
+	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
 
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
 	// Files\\nodejs\\node.exe";
@@ -31,7 +36,7 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 		try {
 			process = processBuilder.start();
 
-//			IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
+			// IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
 			// create a debug target
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
