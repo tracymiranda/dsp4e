@@ -3,7 +3,7 @@ package org.eclipse.dsp4e.example.readme.presentation;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IValueDetailListener;
-import org.eclipse.dsp43.example.readme.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.example.readme.debugmodel.ReadmeDebugTarget;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.IEditorInput;
 

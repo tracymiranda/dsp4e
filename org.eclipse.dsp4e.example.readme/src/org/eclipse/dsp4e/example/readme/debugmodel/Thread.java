@@ -1,4 +1,4 @@
-package org.eclipse.dsp43.example.readme.debugmodel;
+package org.eclipse.dsp4e.example.readme.debugmodel;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

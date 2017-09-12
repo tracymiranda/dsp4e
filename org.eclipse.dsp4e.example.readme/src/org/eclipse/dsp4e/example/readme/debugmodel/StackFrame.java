@@ -1,8 +1,7 @@
-package org.eclipse.dsp43.example.readme.debugmodel;
+package org.eclipse.dsp4e.example.readme.debugmodel;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.eclipse.cdt.internal.core.model.Variable;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -16,7 +15,7 @@ import org.eclipse.dsp4j.IDebugProtocolServer;
 
 final class StackFrame implements IStackFrame {
 	/**
-	 * 
+	 *
 	 */
 	private final ReadmeDebugTarget debugTarget;
 	private final org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2;

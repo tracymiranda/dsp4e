@@ -11,8 +11,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.eclipse.dsp43.example.readme.debugmodel.ReadmeDebugTarget;
 import org.eclipse.dsp4e.example.readme.Activator;
+import org.eclipse.dsp4e.example.readme.debugmodel.ReadmeDebugTarget;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
