@@ -9,10 +9,8 @@ public class MockDebugElement extends DebugElement {
 		super(target);
 	}
 
+	public static final String ID_MOCK_DEBUG_MODEL = "mock.debugModel";
 
-	public static final String ID_MOCK_DEBUG_MODEL="mock.debugModel";
-
-	
 	@Override
 	public String getModelIdentifier() {
 		return ID_MOCK_DEBUG_MODEL;

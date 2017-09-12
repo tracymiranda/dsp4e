@@ -1,7 +1,5 @@
 package org.eclipse.dsp4e.example.readme.debugmodel;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -9,9 +7,6 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
-import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
-import org.eclipse.dsp4j.IDebugProtocolServer;
 
 final class StackFrame implements IStackFrame {
 	/**

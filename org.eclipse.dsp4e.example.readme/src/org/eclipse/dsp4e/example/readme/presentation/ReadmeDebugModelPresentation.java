@@ -12,33 +12,38 @@ public class ReadmeDebugModelPresentation extends LabelProvider implements IDebu
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ReadmeDebugTarget) {
-			return getTargetText((ReadmeDebugTarget)element);
+			return getTargetText((ReadmeDebugTarget) element);
 		}
 		return "Model presentation default text";
 	}
-	
-    /**
+
+	/**
 	 * Returns a label for the given debug target
 	 * 
-	 * @param target debug target
+	 * @param target
+	 *            debug target
 	 * @return a label for the given debug target
 	 */
 	private String getTargetText(ReadmeDebugTarget target) {
-//		try {
-//			String pgmPath = target.getLaunch().getLaunchConfiguration().getAttribute(DebugCorePlugin.ATTR_PDA_PROGRAM, (String)null);
-//			if (pgmPath != null) {
-//			    IPath path = new Path(pgmPath);
-//				String label = ""; //$NON-NLS-1$
-//			    if (target.isTerminated()) {
-//					label = "<terminated>"; //$NON-NLS-1$
-//			    }
-//				return label + "PDA [" + path.lastSegment() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-//			}
-//		} catch (CoreException e) {
-//		}
+		// try {
+		// String pgmPath =
+		// target.getLaunch().getLaunchConfiguration().getAttribute(DebugCorePlugin.ATTR_PDA_PROGRAM,
+		// (String)null);
+		// if (pgmPath != null) {
+		// IPath path = new Path(pgmPath);
+		// String label = ""; //$NON-NLS-1$
+		// if (target.isTerminated()) {
+		// label = "<terminated>"; //$NON-NLS-1$
+		// }
+		// return label + "PDA [" + path.lastSegment() + "]"; //$NON-NLS-1$
+		// //$NON-NLS-2$
+		// }
+		// } catch (CoreException e) {
+		// }
 		return "Readme Mock Debug Target Text []"; //$NON-NLS-1$
-		
+
 	}
+
 	@Override
 	public IEditorInput getEditorInput(Object element) {
 		// TODO Auto-generated method stub
@@ -52,14 +57,13 @@ public class ReadmeDebugModelPresentation extends LabelProvider implements IDebu
 	}
 
 	@Override
-	public void setAttribute(String attribute, Object value) {	
+	public void setAttribute(String attribute, Object value) {
 	}
 
 	@Override
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }

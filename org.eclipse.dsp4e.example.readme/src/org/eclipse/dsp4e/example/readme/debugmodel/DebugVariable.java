@@ -6,15 +6,14 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 
-final class DebugVariable implements IVariable{	
-	
+final class DebugVariable implements IVariable {
+
 	private String string;
-	
+
 	public DebugVariable(String string) {
 		this.string = string;
 		// TODO Auto-generated constructor stub
 	}
-
 
 	@Override
 	public String getModelIdentifier() {
@@ -43,13 +42,13 @@ final class DebugVariable implements IVariable{
 	@Override
 	public void setValue(String expression) throws DebugException {
 		// TODO Auto-generated method stub
-		
+
 	}
-				
+
 	@Override
 	public void setValue(IValue value) throws DebugException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -76,7 +75,6 @@ final class DebugVariable implements IVariable{
 		return new DebugValue();
 	}
 
-	
 	@Override
 	public String getName() throws DebugException {
 		// TODO Auto-generated method stub

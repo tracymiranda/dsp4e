@@ -20,14 +20,11 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IValue;
-import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.Source;
-import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
-import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
+import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
 import org.eclipse.dsp4j.IDebugProtocolClient;
 import org.eclipse.dsp4j.IDebugProtocolServer;
 import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
@@ -79,7 +76,6 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 			System.out.println(future.get());
 			System.out.println("Printed future.get");
 
-			
 		} catch (InterruptedException | ExecutionException e) {
 			String message = e.getMessage();
 			String lines[] = message.split("\\r\\n");

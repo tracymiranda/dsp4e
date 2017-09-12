@@ -3,7 +3,6 @@ package org.eclipse.dsp4e.example.readme.debugmodel;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -51,7 +50,8 @@ final class Thread implements IThread {
 
 	@Override
 	public void stepOver() throws DebugException {
-		ReadmeDebugTarget.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(body.threads[i].id)));
+		ReadmeDebugTarget
+				.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(body.threads[i].id)));
 		debugTarget.fireResumeEvent(0);
 		debugTarget.fireSuspendEvent(0);
 	}
@@ -135,7 +135,8 @@ final class Thread implements IThread {
 
 	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
-		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = debugTarget.debugProtocolServer.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20));
+		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = debugTarget.debugProtocolServer
+				.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20));
 		org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2;
 		try {
 			body2 = future.get();
@@ -147,7 +148,7 @@ final class Thread implements IThread {
 			final int f = iv;
 			frames[f] = new StackFrame(debugTarget, body2, i, f, threads);
 		}
-		
+
 		return frames;
 
 	}
