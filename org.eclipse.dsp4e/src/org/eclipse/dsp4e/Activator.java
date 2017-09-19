@@ -1,4 +1,4 @@
-package org.eclipse.dsp4e.example.readme;
+package org.eclipse.dsp4e;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

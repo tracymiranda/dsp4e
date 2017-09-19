@@ -1,9 +1,9 @@
-package org.eclipse.dsp4e.example.readme.presentation;
+package org.eclipse.dsp4e.presentation;
 
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IValueDetailListener;
-import org.eclipse.dsp4e.example.readme.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.IEditorInput;
 

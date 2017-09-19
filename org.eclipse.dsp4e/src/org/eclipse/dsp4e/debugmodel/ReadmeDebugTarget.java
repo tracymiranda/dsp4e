@@ -1,4 +1,4 @@
-package org.eclipse.dsp4e.example.readme.debugmodel;
+package org.eclipse.dsp4e.debugmodel;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +20,7 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.Source;
@@ -31,7 +32,7 @@ import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget, IDebugProtocolClient {
-	private static final String README_MD = "C:\\Users\\artke\\Desktop\\Debug\\dsp4e\\README.md";
+	private static final String README_MD = "/scratch/debug/runtime-EclipseApplication/GenericProject/readme.md";
 
 	private ILaunch launch;
 	private IProcess process;
@@ -116,7 +117,6 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -156,14 +156,10 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public void resume() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void suspend() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -185,8 +181,6 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public void disconnect() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -225,23 +219,6 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 		}
 		return threads;
 	}
-
-	// @Override
-	// public IVariable[] getVariables() throws DebugException {
-	// CompletableFuture<Body> variableFuture = debugProtocolServer.variables();
-	// Body body;
-	// try {
-	// body = variableFuture.get();
-	// } catch (InterruptedException | ExecutionException e) {
-	// throw newTargetRequestFailedException("Can't get variables", e);
-	// }
-	// IVariable[] variables = new IVariable[body.variables.length];
-	// for (int iv = 0; iv < variables.length; iv++) {
-	// final int i = iv;
-	// variables[i] = new variables(this, body, variables, i);
-	// }
-	// return variables;
-	// }
 
 	@Override
 	public boolean hasThreads() throws DebugException {

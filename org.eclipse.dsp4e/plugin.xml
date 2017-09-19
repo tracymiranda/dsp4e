@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.eclipse.dsp4e.example.readme.launcher.ReadmeLaunchDelegate"
+            delegate="org.eclipse.dsp4e.launcher.ReadmeLaunchDelegate"
             id="readme.launchType"
             modes="debug"
             name="ReadMe">
@@ -13,7 +13,7 @@
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="org.eclipse.dsp4e.example.readme.launcher.ReadmeTabGroup"
+            class="org.eclipse.dsp4e.launcher.ReadmeTabGroup"
             description="Debug a readme.md file"
             id="readme.tabGroup"
             type="readme.launchType">
@@ -30,7 +30,7 @@
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
       <debugModelPresentation
-            class="org.eclipse.dsp4e.example.readme.presentation.ReadmeDebugModelPresentation"
+            class="org.eclipse.dsp4e.presentation.ReadmeDebugModelPresentation"
             id="mock.debugModel">
       </debugModelPresentation>
    </extension>

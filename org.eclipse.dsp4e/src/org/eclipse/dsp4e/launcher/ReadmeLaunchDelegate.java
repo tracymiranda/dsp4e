@@ -1,4 +1,4 @@
-package org.eclipse.dsp4e.example.readme.launcher;
+package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
 
@@ -11,8 +11,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.eclipse.dsp4e.example.readme.Activator;
-import org.eclipse.dsp4e.example.readme.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.Activator;
+import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
@@ -20,8 +20,8 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	// private static final String NODE_DEBUG_ARG =
 	// "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
-	private static final String NODE_DEBUG_CMD = "C:\\\\Program Files\\\\nodejs\\\\node.exe";
-	private static final String NODE_DEBUG_ARG = "C:\\\\Users\\\\artke\\\\.vscode\\\\extensions\\\\andreweinand.mock-debug-0.19.0\\\\out\\\\mockDebug.js";
+	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
+	private static final String NODE_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
 
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
 	// Files\\nodejs\\node.exe";
@@ -35,6 +35,7 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 		Process process;
 		try {
 			process = processBuilder.start();
+
 
 			// IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
 			// create a debug target

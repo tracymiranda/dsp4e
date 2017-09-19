@@ -1,4 +1,4 @@
-package org.eclipse.dsp4e.example.readme.launcher;
+package org.eclipse.dsp4e.launcher;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;

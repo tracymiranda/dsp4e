@@ -1,4 +1,4 @@
-package org.eclipse.dsp4e.example.readme.debugmodel;
+package org.eclipse.dsp4e.debugmodel;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
