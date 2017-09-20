@@ -5,26 +5,27 @@
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.eclipse.dsp4e.launcher.ReadmeLaunchDelegate"
-            id="readme.launchType"
+            id="dsp.launchType"
             modes="debug"
-            name="ReadMe">
+            name="Debug Protocol Generic Launcher"
+            public="true">
       </launchConfigurationType>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="org.eclipse.dsp4e.launcher.ReadmeTabGroup"
-            description="Debug a readme.md file"
-            id="readme.tabGroup"
-            type="readme.launchType">
+            class="org.eclipse.dsp4e.launcher.DSPTabGroup"
+            description="Debug using the debug protocol"
+            id="dsp.tabGroup"
+            type="dsp.launchType">
       </launchConfigurationTabGroup>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
-            configTypeID="readme.launchType"
+            configTypeID="dsp.launchType"
             icon="icons/pda.gif"
-            id="readme.typeImage">
+            id="dsp.typeImage">
       </launchConfigurationTypeImage>
    </extension>
    <extension
