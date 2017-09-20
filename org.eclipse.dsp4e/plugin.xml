@@ -30,8 +30,8 @@
    <extension
          point="org.eclipse.debug.ui.debugModelPresentations">
       <debugModelPresentation
-            class="org.eclipse.dsp4e.presentation.ReadmeDebugModelPresentation"
-            id="mock.debugModel">
+            class="org.eclipse.dsp4e.presentation.DSPDebugModelPresentation"
+            id="dsp.debugModel">
       </debugModelPresentation>
    </extension>
 

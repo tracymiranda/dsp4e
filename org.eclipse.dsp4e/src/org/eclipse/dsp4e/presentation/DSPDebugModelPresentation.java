@@ -7,7 +7,7 @@ import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.IEditorInput;
 
-public class ReadmeDebugModelPresentation extends LabelProvider implements IDebugModelPresentation {
+public class DSPDebugModelPresentation extends LabelProvider implements IDebugModelPresentation {
 
 	@Override
 	public String getText(Object element) {
@@ -40,7 +40,7 @@ public class ReadmeDebugModelPresentation extends LabelProvider implements IDebu
 		// }
 		// } catch (CoreException e) {
 		// }
-		return "Readme Mock Debug Target Text []"; //$NON-NLS-1$
+		return "DSP Debug Target Text []"; //$NON-NLS-1$
 
 	}
 
