@@ -1,6 +1,8 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,7 +23,10 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	// "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
 	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
-	private static final String NODE_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.19.0/out/mockDebug.js";
+	private static final String MOCK_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.20.0/out/mockDebug.js";
+	private static final String NATIVE_DEBUG_ARG = "/home/jonah/.vscode/extensions/webfreak.debug-0.21.2/out/src/gdb.js";
+	private static final String CWD = "/scratch/debug/examples/nativedebug";
+	private static final String README_MD = "/scratch/debug/runtime-EclipseApplication/GenericProject/readme.md";
 
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
 	// Files\\nodejs\\node.exe";
@@ -31,7 +36,23 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
-		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, NODE_DEBUG_ARG);
+		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, MOCK_DEBUG_ARG);
+		Map<String, Object> launchArguments = new HashMap<>();
+//		launchArguments.put("name", "Debug");
+//		launchArguments.put("type", "gdb");
+//		launchArguments.put("request", "launch");
+//		launchArguments.put("target", "./main");
+//		launchArguments.put("cwd", CWD);
+		launchArguments.put("type", "mock");
+		launchArguments.put("request", "launch");
+		launchArguments.put("name", "Mock Debug");
+		launchArguments.put("program", README_MD);
+		launchArguments.put("stopOnEntry", true);
+		launchArguments.put("trace", false);
+		launchArguments.put("noDebug", false);
+
+
+
 		Process process;
 		try {
 			process = processBuilder.start();
@@ -41,7 +62,7 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 			// create a debug target
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream());
+				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream(), launchArguments);
 				launch.addDebugTarget(target);
 			}
 		} catch (IOException e1) {

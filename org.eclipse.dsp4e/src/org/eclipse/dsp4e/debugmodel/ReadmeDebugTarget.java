@@ -2,7 +2,6 @@ package org.eclipse.dsp4e.debugmodel;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +19,6 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
 import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
 import org.eclipse.dsp4j.DebugProtocol.Source;
@@ -32,7 +30,6 @@ import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget, IDebugProtocolClient {
-	private static final String README_MD = "/scratch/debug/runtime-EclipseApplication/GenericProject/readme.md";
 
 	private ILaunch launch;
 	private IProcess process;
@@ -40,7 +37,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
 
-	public ReadmeDebugTarget(ILaunch launch, IProcess process, InputStream in, OutputStream out) throws CoreException {
+	public ReadmeDebugTarget(ILaunch launch, IProcess process, InputStream in, OutputStream out, Map<String, Object> launchArguments) throws CoreException {
 		super(null);
 		this.launch = launch;
 		this.process = process;
@@ -52,21 +49,17 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 		debugProtocolServer = debugProtocolLauncher.getRemoteProxy();
 
 		getAndPrint(debugProtocolServer.initialize(
-				new InitializeRequestArguments().setClientID("test").setAdapterID("mock").setPathFormat("path")));
+				new InitializeRequestArguments().setClientID("lsp4e").setAdapterID((String) launchArguments.get("type")).setPathFormat("path")));
+
+//		getAndPrint(debugProtocolServer.setBreakpoints(
+//				new SetBreakpointsArguments().setSource(new Source().setPath(CWD).setName("main.c")).setBreakpoints(
+//						new DebugProtocol.SourceBreakpoint[] { new DebugProtocol.SourceBreakpoint().setLine(3) })));
 
 		getAndPrint(debugProtocolServer.setBreakpoints(
-				new SetBreakpointsArguments().setSource(new Source().setPath(README_MD).setName("Readme.md"))));
+				new SetBreakpointsArguments().setSource(new Source().setPath((String) launchArguments.get("program")).setName("Readme.md"))));
 
 		getAndPrint(debugProtocolServer.configurationDone());
 
-		Map<String, Object> launchArguments = new HashMap<>();
-		launchArguments.put("type", "mock");
-		launchArguments.put("request", "launch");
-		launchArguments.put("name", "Mock Debug");
-		launchArguments.put("program", README_MD);
-		launchArguments.put("stopOnEntry", true);
-		launchArguments.put("trace", false);
-		launchArguments.put("noDebug", false);
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
 		getAndPrint(debugProtocolServer.variables(new VariablesArguments().setVariablesReference(1001)));
 
