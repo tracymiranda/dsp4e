@@ -1,6 +1,7 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	private static final String MOCK_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.20.0/out/mockDebug.js";
 	private static final String NATIVE_DEBUG_ARG = "/home/jonah/.vscode/extensions/webfreak.debug-0.21.2/out/src/gdb.js";
 	private static final String CWD = "/scratch/debug/examples/nativedebug";
-	private static final String README_MD = "/scratch/debug/runtime-EclipseApplication/GenericProject/readme.md";
+	private static final String README_MD = "/scratch/debug/examples/mockdebug/readme.md";
 
 	// private static final String NODE_DEBUG_CMD = "C:\\Program
 	// Files\\nodejs\\node.exe";
@@ -38,11 +39,11 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 			throws CoreException {
 		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, MOCK_DEBUG_ARG);
 		Map<String, Object> launchArguments = new HashMap<>();
-//		launchArguments.put("name", "Debug");
-//		launchArguments.put("type", "gdb");
-//		launchArguments.put("request", "launch");
-//		launchArguments.put("target", "./main");
-//		launchArguments.put("cwd", CWD);
+		// launchArguments.put("name", "Debug");
+		// launchArguments.put("type", "gdb");
+		// launchArguments.put("request", "launch");
+		// launchArguments.put("target", "./main");
+		// launchArguments.put("cwd", CWD);
 		launchArguments.put("type", "mock");
 		launchArguments.put("request", "launch");
 		launchArguments.put("name", "Mock Debug");
@@ -51,18 +52,16 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 		launchArguments.put("trace", false);
 		launchArguments.put("noDebug", false);
 
-
-
-		Process process;
+		// try (Socket process = new Socket("127.0.0.1", 4711)){
 		try {
-			process = processBuilder.start();
-
+			Process process = processBuilder.start();
 
 			// IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
 			// create a debug target
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream(), launchArguments);
+				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream(),
+						launchArguments);
 				launch.addDebugTarget(target);
 			}
 		} catch (IOException e1) {

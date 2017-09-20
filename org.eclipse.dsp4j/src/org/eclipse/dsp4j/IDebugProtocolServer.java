@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.dsp4j.DebugProtocol.Capabilities;
+import org.eclipse.dsp4j.DebugProtocol.ContinueArguments;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectResponse;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
@@ -26,7 +27,7 @@ public interface IDebugProtocolServer {
 
 	@JsonRequest
 	CompletableFuture<DisconnectResponse> disconnect(DisconnectArguments disconnectArguments);
-	
+
 	@JsonRequest
 	CompletableFuture<SetBreakpointsResponse.Body> setBreakpoints(SetBreakpointsArguments setBreakpointsArgs);
 
@@ -38,13 +39,16 @@ public interface IDebugProtocolServer {
 
 	@JsonRequest
 	CompletableFuture<ThreadsResponse.Body> threads();
-	
+
 	@JsonRequest
 	CompletableFuture<VariablesResponse.Body> variables(VariablesArguments variablesArguments);
-	
+
 	@JsonRequest
 	CompletableFuture<Void> next(NextArguments nextArguments);
-	
+
+	@JsonRequest(value = "continue")
+	CompletableFuture<Void> continue_(ContinueArguments nextArguments);
+
 	@JsonRequest
 	CompletableFuture<StackTraceResponse.Body> stackTrace(StackTraceArguments stackTraceArguments);
 }

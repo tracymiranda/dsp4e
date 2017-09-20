@@ -9,13 +9,14 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.dsp4j.DebugProtocol.ContinueArguments;
 import org.eclipse.dsp4j.DebugProtocol.NextArguments;
 import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
 
 final class Thread implements IThread {
 	/**
-	 * 
+	 *
 	 */
 	private final ReadmeDebugTarget debugTarget;
 	private final Body body;
@@ -86,6 +87,9 @@ final class Thread implements IThread {
 
 	@Override
 	public void resume() throws DebugException {
+		ReadmeDebugTarget.getAndPrint(
+				debugTarget.debugProtocolServer.continue_(new ContinueArguments().setThreadId(body.threads[i].id)));
+		debugTarget.fireResumeEvent(0);
 	}
 
 	@Override
@@ -100,7 +104,7 @@ final class Thread implements IThread {
 
 	@Override
 	public boolean canResume() {
-		return false;
+		return true;
 	}
 
 	@Override
