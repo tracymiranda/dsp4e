@@ -50,8 +50,7 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public void resume() throws DebugException {
-		// TODO Auto-generated method stub
-
+		getThread().resume();
 	}
 
 	@Override
@@ -68,8 +67,7 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public boolean canResume() {
-		// TODO Auto-generated method stub
-		return false;
+		return getThread().canResume();
 	}
 
 	@Override
@@ -80,8 +78,7 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public void stepOver() throws DebugException {
-		// TODO Auto-generated method stub
-
+		getThread().stepOver();
 	}
 
 	@Override
@@ -104,8 +101,7 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public boolean canStepOver() {
-		// TODO Auto-generated method stub
-		return false;
+		return getThread().canStepOver();
 	}
 
 	@Override
