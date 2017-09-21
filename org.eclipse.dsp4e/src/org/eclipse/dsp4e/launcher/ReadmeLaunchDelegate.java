@@ -1,7 +1,6 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,21 +22,22 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	// private static final String NODE_DEBUG_ARG =
 	// "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
-	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
-	private static final String MOCK_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.20.0/out/mockDebug.js";
+
 	private static final String NATIVE_DEBUG_ARG = "/home/jonah/.vscode/extensions/webfreak.debug-0.21.2/out/src/gdb.js";
 	private static final String CWD = "/scratch/debug/examples/nativedebug";
 	private static final String README_MD = "/scratch/debug/examples/mockdebug/readme.md";
 
-	// private static final String NODE_DEBUG_CMD = "C:\\Program
-	// Files\\nodejs\\node.exe";
-	// private static final String NODE_DEBUG_ARG =
-	// "C:\\Users\\tracy\\.vscode-insiders\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
-
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
-		ProcessBuilder processBuilder = new ProcessBuilder(NODE_DEBUG_CMD, MOCK_DEBUG_ARG);
+		
+		String debugCmd = configuration.getAttribute(Activator.ATTR_DSP_CMD, (String)null);
+		if (debugCmd == null) {
+			abort("Debug command unspecified.", null); //$NON-NLS-1$
+		}
+		String debugArgs = configuration.getAttribute(Activator.ATTR_DSP_ARGS, (String)null);
+		
+		ProcessBuilder processBuilder = new ProcessBuilder(debugCmd, debugArgs);
 		Map<String, Object> launchArguments = new HashMap<>();
 		// launchArguments.put("name", "Debug");
 		// launchArguments.put("type", "gdb");

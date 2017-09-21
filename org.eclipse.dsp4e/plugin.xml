@@ -7,7 +7,7 @@
             delegate="org.eclipse.dsp4e.launcher.ReadmeLaunchDelegate"
             id="dsp.launchType"
             modes="debug"
-            name="Debug Protocol Generic Launcher"
+            name="Debug Adapter Launcher"
             public="true">
       </launchConfigurationType>
    </extension>

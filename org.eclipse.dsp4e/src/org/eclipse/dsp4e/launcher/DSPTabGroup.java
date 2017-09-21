@@ -9,7 +9,7 @@ public class DSPTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		setTabs(new ILaunchConfigurationTab[] { new CommonTab() });
+		setTabs(new ILaunchConfigurationTab[] { new DSPMainTab(), new CommonTab() });
 	}
 
 }
