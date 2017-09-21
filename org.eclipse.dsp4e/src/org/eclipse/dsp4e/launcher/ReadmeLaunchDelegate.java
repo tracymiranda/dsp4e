@@ -1,7 +1,9 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,14 +26,19 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
-		
+		List<String> command = new ArrayList<>();
 		String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String)null);
+
 		if (debugCmd == null) {
 			abort("Debug command unspecified.", null); //$NON-NLS-1$
 		}
+		command.add(debugCmd);
 		String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String)null);
-		
-		ProcessBuilder processBuilder = new ProcessBuilder(debugCmd, debugArgs);
+		if (debugArgs != null && !debugArgs.isEmpty()) {
+			command.add(debugCmd);
+		}
+
+		ProcessBuilder processBuilder = new ProcessBuilder(command);
 		Map<String, Object> launchArguments = new HashMap<>();
 		// launchArguments.put("name", "Debug");
 		// launchArguments.put("type", "gdb");
