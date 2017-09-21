@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.dsp4j.DebugProtocol.Capabilities;
 import org.eclipse.dsp4j.DebugProtocol.ContinueArguments;
+import org.eclipse.dsp4j.DebugProtocol.ContinueResponse;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectResponse;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
@@ -17,7 +18,6 @@ import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse;
 import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
 import org.eclipse.dsp4j.DebugProtocol.VariablesResponse;
-import org.eclipse.dsp4j.DebugProtocol.VariablesResponse.Body;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 
@@ -47,7 +47,7 @@ public interface IDebugProtocolServer {
 	CompletableFuture<Void> next(NextArguments nextArguments);
 
 	@JsonRequest(value = "continue")
-	CompletableFuture<Void> continue_(ContinueArguments nextArguments);
+	CompletableFuture<ContinueResponse.Body> continue_(ContinueArguments arguments);
 
 	@JsonRequest
 	CompletableFuture<StackTraceResponse.Body> stackTrace(StackTraceArguments stackTraceArguments);

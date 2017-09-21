@@ -2,6 +2,7 @@ package org.eclipse.dsp4j;
 
 import org.eclipse.dsp4j.DebugProtocol.OutputEvent;
 import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
+import org.eclipse.dsp4j.DebugProtocol.TerminatedEvent;
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
 
 public interface IDebugProtocolClient {
@@ -19,6 +20,11 @@ public interface IDebugProtocolClient {
 	@JsonNotification
 	default void stopped(StoppedEvent.Body body) {
 		System.out.println("stopped: " + body);
+	}
+	
+	@JsonNotification
+	default void terminated(TerminatedEvent.Body body) {
+		System.out.println("terminated: " + body);
 	}
 
 }

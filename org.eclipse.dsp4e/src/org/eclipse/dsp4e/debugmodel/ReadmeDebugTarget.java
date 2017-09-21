@@ -19,10 +19,9 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
-import org.eclipse.dsp4j.DebugProtocol;
+import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
-import org.eclipse.dsp4j.DebugProtocol.SetBreakpointsArguments;
-import org.eclipse.dsp4j.DebugProtocol.Source;
+import org.eclipse.dsp4j.DebugProtocol.TerminatedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
 import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
 import org.eclipse.dsp4j.IDebugProtocolClient;
@@ -34,6 +33,9 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	private ILaunch launch;
 	private IProcess process;
+	
+	// terminated state
+	private boolean fTerminated = false;
 
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
@@ -54,12 +56,12 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 				.setAdapterID((String) launchArguments.get("type")).setPathFormat("path")));
 
 		// setBreakpoints({"source":{"path":"/scratch/debug/examples/mockdebug/readme.md","name":"readme.md"},"lines":[2],"breakpoints":[{"line":2}],"sourceModified":false})
-		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
-				.setSource(new Source().setPath("/scratch/debug/examples/mockdebug/readme.md").setName("readme.md"))
-				.setLines(new Integer[] { 3 })
-				.setBreakpoints(
-						new DebugProtocol.SourceBreakpoint[] { new DebugProtocol.SourceBreakpoint().setLine(3) })
-				.setSourceModified(false)));
+//		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
+//				.setSource(new Source().setPath("/scratch/debug/examples/mockdebug/readme.md").setName("readme.md"))
+//				.setLines(new Integer[] { 3 })
+//				.setBreakpoints(
+//						new DebugProtocol.SourceBreakpoint[] { new DebugProtocol.SourceBreakpoint().setLine(3) })
+//				.setSourceModified(false)));
 
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
 		getAndPrint(debugProtocolServer.configurationDone());
@@ -67,6 +69,11 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	}
 
+	/**
+	 * Gets the response from the debug command and prints some debug info
+	 * 
+	 * @param future
+	 */
 	static void getAndPrint(CompletableFuture<?> future) {
 		try {
 			System.out.println(future.get());
@@ -122,16 +129,23 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public boolean isTerminated() {
-		return process != null && process.isTerminated();
+		return fTerminated || (process != null && process.isTerminated());
+	}
+	
+	@Override
+	public void terminated(TerminatedEvent.Body body) {
+		fTerminated = true;
+		fireTerminateEvent();
 	}
 
 	@Override
 	public void terminate() throws DebugException {
-		if (process == null) {
-			return;
-		}
-		System.out.println("Try to terminate stuff");
-		process.terminate();
+		debugProtocolServer.disconnect(new DisconnectArguments().setTerminateDebuggee(true));
+//		if (process == null) {
+//			return;
+//		}
+//		System.out.println("Try to terminate stuff");
+//		process.terminate();
 	}
 
 	@Override
