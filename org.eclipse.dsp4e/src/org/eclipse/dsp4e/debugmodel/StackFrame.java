@@ -183,14 +183,12 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public int getCharStart() throws DebugException {
-		// TODO Auto-generated method stub
-		return 0;
+		return -1;
 	}
 
 	@Override
 	public int getCharEnd() throws DebugException {
-		// TODO Auto-generated method stub
-		return 0;
+		return -1;
 	}
 
 	public String getSourceName() {
