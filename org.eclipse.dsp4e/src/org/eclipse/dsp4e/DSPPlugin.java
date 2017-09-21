@@ -6,7 +6,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class DSPPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.dsp4e.example.readme"; //$NON-NLS-1$
@@ -17,14 +17,15 @@ public class Activator extends AbstractUIPlugin {
 	// Launch configuration attribute keys
 	public static final String ATTR_DSP_CMD = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_CMD";
 	public static final String ATTR_DSP_ARGS = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_ARGS";
+	public static final String  ATTR_DSP_PARAM = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_PARAM";
 
 	// The shared instance
-	private static Activator plugin;
+	private static DSPPlugin plugin;
 
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public DSPPlugin() {
 	}
 
 	/*
@@ -54,7 +55,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static DSPPlugin getDefault() {
 		return plugin;
 	}
 

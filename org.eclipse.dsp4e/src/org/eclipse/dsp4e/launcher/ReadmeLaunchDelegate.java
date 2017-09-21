@@ -13,17 +13,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-import org.eclipse.dsp4e.Activator;
+import org.eclipse.dsp4e.DSPPlugin;
 import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 
 public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
-	// private static final String NODE_DEBUG_CMD = "C:\\Program
-	// Files\\nodejs\\node.exe";
-	// private static final String NODE_DEBUG_ARG =
-	// "C:\\Users\\jonah\\.vscode\\extensions\\andreweinand.mock-debug-0.19.0\\out\\mockDebug.js";
 
-
-	private static final String NATIVE_DEBUG_ARG = "/home/jonah/.vscode/extensions/webfreak.debug-0.21.2/out/src/gdb.js";
 	private static final String CWD = "/scratch/debug/examples/nativedebug";
 	private static final String README_MD = "/scratch/debug/examples/mockdebug/readme.md";
 
@@ -31,11 +25,11 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		
-		String debugCmd = configuration.getAttribute(Activator.ATTR_DSP_CMD, (String)null);
+		String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String)null);
 		if (debugCmd == null) {
 			abort("Debug command unspecified.", null); //$NON-NLS-1$
 		}
-		String debugArgs = configuration.getAttribute(Activator.ATTR_DSP_ARGS, (String)null);
+		String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String)null);
 		
 		ProcessBuilder processBuilder = new ProcessBuilder(debugCmd, debugArgs);
 		Map<String, Object> launchArguments = new HashMap<>();
@@ -80,7 +74,7 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 	 * @throws CoreException
 	 */
 	private void abort(String message, Throwable e) throws CoreException {
-		throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, message, e));
+		throw new CoreException(new Status(IStatus.ERROR, DSPPlugin.PLUGIN_ID, 0, message, e));
 	}
 
 }

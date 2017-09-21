@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
-import org.eclipse.dsp4e.Activator;
+import org.eclipse.dsp4e.DSPPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -21,7 +21,8 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 	private Text debugCommandText;
 	private Text debugArgsText;
-	
+	private Text jsonText;
+
 	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
 	private static final String MOCK_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.20.0/out/mockDebug.js";
 
@@ -35,6 +36,7 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 		createVerticalSpacer(comp, 3);
 		createDebugAdapterComponent(comp);
+		createDebugJSonComponent(comp);
 
 	}
 
@@ -45,39 +47,61 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label debugText = new Label(group, SWT.NONE);
-		debugText.setText("We launch specific debug adapters using these settings. In future this could be handled by an extension point.");
-		
+		debugText.setText(
+				"We launch specific debug adapters using these settings. In future this could be handled by an extension point.");
+
 		debugText.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
-		
+
 		Label programLabel = new Label(group, SWT.NONE);
 		programLabel.setText("&Command:");
 		programLabel.setLayoutData(new GridData(GridData.BEGINNING));
-		
+
 		debugCommandText = new Text(group, SWT.SINGLE | SWT.BORDER);
 		debugCommandText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		debugCommandText.setText(NODE_DEBUG_CMD);
 
 		Label argsLabel = new Label(group, SWT.NONE);
-		argsLabel.setText("&Arguments:"); 
+		argsLabel.setText("&Arguments:");
 		argsLabel.setLayoutData(new GridData(GridData.BEGINNING));
-		
+
 		debugArgsText = new Text(group, SWT.SINGLE | SWT.BORDER);
 		debugArgsText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		debugArgsText.setText(MOCK_DEBUG_ARG);
-		
+
 		debugCommandText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();
 			}
 		});
-		
+
 		debugArgsText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				updateLaunchConfigurationDialog();
 			}
-		});		
+		});
+	}
+
+	private void createDebugJSonComponent(Composite parent) {
+		Composite comp = new Group(parent, SWT.NONE);
+		comp.setLayout(new GridLayout());
+		comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		Label jsonLabel = new Label(comp, SWT.NONE);
+		jsonLabel.setText("&Launch Parameters (Json):");
+		jsonLabel.setLayoutData(new GridData(GridData.BEGINNING));
+
+		jsonText = new Text(comp, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+		jsonText.setLayoutData(new GridData(GridData.FILL_BOTH));
+		jsonText.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				updateLaunchConfigurationDialog();
+			}
+		});
+
 	}
 
 	@Override
@@ -87,17 +111,17 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			String debugCmd = null;
-			debugCmd = configuration.getAttribute(Activator.ATTR_DSP_CMD, (String)null);
+			String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String) null);
 			if (debugCmd != null) {
 				debugCommandText.setText(debugCmd);
 			}
-			
-			String debugArgs = null;
-			debugArgs = configuration.getAttribute(Activator.ATTR_DSP_ARGS, (String)null);
+
+			String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String) null);
 			if (debugArgs != null) {
 				debugArgsText.setText(debugArgs);
-			}			
+			}
+			
+			jsonText.setText(configuration.getAttribute(DSPPlugin.ATTR_DSP_PARAM, ""));
 		} catch (CoreException e) {
 			setErrorMessage(e.getMessage());
 		}
@@ -106,31 +130,30 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		String debugCmd = debugCommandText.getText();
-		if (debugCmd.length() == 0) {
-			debugCmd = null;
-		} else {
-			debugCmd = debugCmd.trim();
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_CMD, getAttributeValueFrom(debugCommandText));
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_ARGS, getAttributeValueFrom(debugArgsText));	
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_PARAM, getAttributeValueFrom(jsonText));
+
+	}
+	
+	/**
+	 * Returns the string in the text widget, or <code>null</code> if empty.
+	 * 
+	 * @return text or <code>null</code>
+	 */
+	protected String getAttributeValueFrom(Text text) {
+		String value = text.getText().trim();
+		if (!value.isEmpty()) {
+			return value;
 		}
-
-		configuration.setAttribute(Activator.ATTR_DSP_CMD, debugCmd);
-		
-		String debugArgs = debugArgsText.getText();
-		if (debugArgs.length() == 0) {
-			debugArgs = null;
-		} else {
-			debugArgs = debugArgs.trim();
-		}
-
-		configuration.setAttribute(Activator.ATTR_DSP_ARGS, debugArgs);		
-
+		return null;
 	}
 
 	@Override
 	public String getName() {
 		return "Debug Adapter";
 	}
-	
+
 	@Override
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
