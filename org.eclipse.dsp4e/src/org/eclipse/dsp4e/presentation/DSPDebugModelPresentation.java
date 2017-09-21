@@ -21,7 +21,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
-public class DSPDebugModelPresentation extends LabelProvider implements IDebugModelPresentation, IDebugEditorPresentation {
+public class DSPDebugModelPresentation extends LabelProvider implements IDebugModelPresentation {
 
 	@Override
 	public String getText(Object element) {
@@ -86,18 +86,6 @@ public class DSPDebugModelPresentation extends LabelProvider implements IDebugMo
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean addAnnotations(IEditorPart editorPart, IStackFrame frame) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void removeAnnotations(IEditorPart editorPart, IThread thread) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
