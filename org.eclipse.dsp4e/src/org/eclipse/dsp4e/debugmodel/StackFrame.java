@@ -8,7 +8,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 
-final class StackFrame implements IStackFrame {
+public class StackFrame implements IStackFrame {
 	/**
 	 *
 	 */
@@ -116,19 +116,17 @@ final class StackFrame implements IStackFrame {
 
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		// TODO Auto-generated method stub
+		System.out.println("StackFrame adapters: " + adapter);
 		return null;
 	}
 
 	@Override
 	public String getModelIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return debugTarget.getModelIdentifier();
 	}
 
 	@Override
 	public ILaunch getLaunch() {
-		// TODO Auto-generated method stub
 		return debugTarget.getLaunch();
 	}
 
@@ -141,7 +139,7 @@ final class StackFrame implements IStackFrame {
 	@Override
 	public boolean hasVariables() throws DebugException {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -193,5 +191,10 @@ final class StackFrame implements IStackFrame {
 	public int getCharEnd() throws DebugException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public String getSourceName() {
+		// TODO implement sourcereferences
+		return body2.stackFrames[f].source.path;
 	}
 }

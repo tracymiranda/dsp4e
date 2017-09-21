@@ -114,12 +114,12 @@ final class Thread implements IThread {
 
 	@Override
 	public String getModelIdentifier() {
-		return null;
+		return debugTarget.getModelIdentifier();
 	}
 
 	@Override
 	public ILaunch getLaunch() {
-		return null;
+		return debugTarget.getLaunch();
 	}
 
 	@Override
@@ -134,7 +134,7 @@ final class Thread implements IThread {
 
 	@Override
 	public IStackFrame getTopStackFrame() throws DebugException {
-		return null;
+		return getStackFrames()[0];
 	}
 
 	@Override
@@ -169,6 +169,6 @@ final class Thread implements IThread {
 
 	@Override
 	public IBreakpoint[] getBreakpoints() {
-		return null;
+		return new IBreakpoint[0];
 	}
 }

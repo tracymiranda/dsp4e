@@ -8,7 +8,9 @@
             id="dsp.launchType"
             modes="debug"
             name="Debug Adapter Launcher"
-            public="true">
+            public="true"
+            sourceLocatorId="org.eclipse.dsp4e.sourceLocator"
+            sourcePathComputerId="org.eclipse.dsp4e.sourcePathComputer">
       </launchConfigurationType>
    </extension>
    <extension
@@ -34,6 +36,21 @@
             class="org.eclipse.dsp4e.presentation.DSPDebugModelPresentation"
             id="dsp.debugModel">
       </debugModelPresentation>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceLocators">
+      <sourceLocator
+            class="org.eclipse.dsp4e.sourcelookup.DSPSourceLookupDirector"
+            id="org.eclipse.dsp4e.sourceLocator"
+            name="DSP Source Locator">
+      </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourcePathComputers">
+      <sourcePathComputer
+            class="org.eclipse.dsp4e.sourcelookup.DSPSourcePathComputerDelegate"
+            id="org.eclipse.dsp4e.sourcePathComputer">
+      </sourcePathComputer>
    </extension>
 
 </plugin>
