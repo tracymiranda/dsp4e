@@ -2,6 +2,7 @@ package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,12 @@ public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 		}.getType();
 		Map<String, Object> launchArguments = gson.fromJson(launchArgumentJson, type);
 
-		// try (Socket process = new Socket("127.0.0.1", 4711)){
 		try {
 			Process process = processBuilder.start();
-
+			// Socket process = new Socket("127.0.0.1", 4711);
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream(),
+				target = new ReadmeDebugTarget(launch, process, process.getInputStream(), process.getOutputStream(),
 						launchArguments);
 				launch.addDebugTarget(target);
 			}

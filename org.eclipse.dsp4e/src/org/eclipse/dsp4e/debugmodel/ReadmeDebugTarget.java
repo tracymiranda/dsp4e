@@ -32,15 +32,15 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget, IDebugProtocolClient {
 
 	private ILaunch launch;
-	private IProcess process;
-	
+	private Process process;
+
 	// terminated state
 	private boolean fTerminated = false;
 
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
 
-	public ReadmeDebugTarget(ILaunch launch, IProcess process, InputStream in, OutputStream out,
+	public ReadmeDebugTarget(ILaunch launch, Process process, InputStream in, OutputStream out,
 			Map<String, Object> launchArguments) throws CoreException {
 		super(null);
 		this.launch = launch;
@@ -71,7 +71,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	/**
 	 * Gets the response from the debug command and prints some debug info
-	 * 
+	 *
 	 * @param future
 	 */
 	static void getAndPrint(CompletableFuture<?> future) {
@@ -129,9 +129,9 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public boolean isTerminated() {
-		return fTerminated || (process != null && process.isTerminated());
+		return fTerminated || (process != null && !process.isAlive());
 	}
-	
+
 	@Override
 	public void terminated(TerminatedEvent.Body body) {
 		fTerminated = true;
@@ -140,12 +140,9 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public void terminate() throws DebugException {
-		debugProtocolServer.disconnect(new DisconnectArguments().setTerminateDebuggee(true));
-//		if (process == null) {
-//			return;
-//		}
-//		System.out.println("Try to terminate stuff");
-//		process.terminate();
+		getAndPrint(debugProtocolServer.disconnect(new DisconnectArguments().setTerminateDebuggee(true)));
+		fTerminated = true;
+		fireTerminateEvent();
 	}
 
 	@Override
@@ -209,7 +206,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	@Override
 	public IProcess getProcess() {
-		return process;
+		return null;
 	}
 
 	@Override
