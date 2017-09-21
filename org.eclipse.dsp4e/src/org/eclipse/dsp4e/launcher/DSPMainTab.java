@@ -25,6 +25,10 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 	private static final String NODE_DEBUG_CMD = "/scratch/node/node-v6.11.0-linux-x64/bin/node";
 	private static final String MOCK_DEBUG_ARG = "/home/jonah/.vscode/extensions/andreweinand.mock-debug-0.20.0/out/mockDebug.js";
+	private static final String MOCK_DEBUG_PARAMS = "{\r\n" + "            \"type\": \"mock\",\r\n"
+			+ "            \"request\": \"launch\",\r\n" + "            \"name\": \"Mock Debug\",\r\n"
+			+ "            \"program\": \"/scratch/debug/examples/mockdebug/readme.md\",\r\n"
+			+ "            \"stopOnEntry\": true,\r\n" + "            \"trace\": true\r\n" + "}";
 
 	@Override
 	public void createControl(Composite parent) {
@@ -58,7 +62,6 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 		debugCommandText = new Text(group, SWT.SINGLE | SWT.BORDER);
 		debugCommandText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		debugCommandText.setText(NODE_DEBUG_CMD);
 
 		Label argsLabel = new Label(group, SWT.NONE);
 		argsLabel.setText("&Arguments:");
@@ -66,7 +69,6 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 		debugArgsText = new Text(group, SWT.SINGLE | SWT.BORDER);
 		debugArgsText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		debugArgsText.setText(MOCK_DEBUG_ARG);
 
 		debugCommandText.addModifyListener(new ModifyListener() {
 			@Override
@@ -106,21 +108,16 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_CMD, NODE_DEBUG_CMD);
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_ARGS, MOCK_DEBUG_ARG);
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_PARAM, MOCK_DEBUG_PARAMS);
 	}
 
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String) null);
-			if (debugCmd != null) {
-				debugCommandText.setText(debugCmd);
-			}
-
-			String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String) null);
-			if (debugArgs != null) {
-				debugArgsText.setText(debugArgs);
-			}
-			
+			debugCommandText.setText(configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, ""));
+			debugArgsText.setText(configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, ""));
 			jsonText.setText(configuration.getAttribute(DSPPlugin.ATTR_DSP_PARAM, ""));
 		} catch (CoreException e) {
 			setErrorMessage(e.getMessage());
@@ -131,14 +128,14 @@ public class DSPMainTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(DSPPlugin.ATTR_DSP_CMD, getAttributeValueFrom(debugCommandText));
-		configuration.setAttribute(DSPPlugin.ATTR_DSP_ARGS, getAttributeValueFrom(debugArgsText));	
+		configuration.setAttribute(DSPPlugin.ATTR_DSP_ARGS, getAttributeValueFrom(debugArgsText));
 		configuration.setAttribute(DSPPlugin.ATTR_DSP_PARAM, getAttributeValueFrom(jsonText));
 
 	}
-	
+
 	/**
 	 * Returns the string in the text widget, or <code>null</code> if empty.
-	 * 
+	 *
 	 * @return text or <code>null</code>
 	 */
 	protected String getAttributeValueFrom(Text text) {

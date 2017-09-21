@@ -1,8 +1,8 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,47 +18,38 @@ import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.dsp4e.DSPPlugin;
 import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 
-public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-	private static final String CWD = "/scratch/debug/examples/nativedebug";
-	private static final String README_MD = "/scratch/debug/examples/mockdebug/readme.md";
+public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
 
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
 			throws CoreException {
 		List<String> command = new ArrayList<>();
-		String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String)null);
+		String debugCmd = configuration.getAttribute(DSPPlugin.ATTR_DSP_CMD, (String) null);
 
 		if (debugCmd == null) {
 			abort("Debug command unspecified.", null); //$NON-NLS-1$
 		}
 		command.add(debugCmd);
-		String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String)null);
+		String debugArgs = configuration.getAttribute(DSPPlugin.ATTR_DSP_ARGS, (String) null);
 		if (debugArgs != null && !debugArgs.isEmpty()) {
-			command.add(debugCmd);
+			command.add(debugArgs);
 		}
 
 		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		Map<String, Object> launchArguments = new HashMap<>();
-		// launchArguments.put("name", "Debug");
-		// launchArguments.put("type", "gdb");
-		// launchArguments.put("request", "launch");
-		// launchArguments.put("target", "./main");
-		// launchArguments.put("cwd", CWD);
-		launchArguments.put("type", "mock");
-		launchArguments.put("request", "launch");
-		launchArguments.put("name", "Mock Debug");
-		launchArguments.put("program", README_MD);
-		launchArguments.put("stopOnEntry", true);
-		launchArguments.put("trace", false);
-		launchArguments.put("noDebug", false);
+
+		String launchArgumentJson = configuration.getAttribute(DSPPlugin.ATTR_DSP_PARAM, (String) null);
+		Gson gson = new Gson();
+		Type type = new TypeToken<Map<String, Object>>() {
+		}.getType();
+		Map<String, Object> launchArguments = gson.fromJson(launchArgumentJson, type);
 
 		// try (Socket process = new Socket("127.0.0.1", 4711)){
 		try {
 			Process process = processBuilder.start();
 
-			// IProcess p = DebugPlugin.newProcess(launch, process, "Launch mock debug");
-			// create a debug target
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
 				target = new ReadmeDebugTarget(launch, null, process.getInputStream(), process.getOutputStream(),
