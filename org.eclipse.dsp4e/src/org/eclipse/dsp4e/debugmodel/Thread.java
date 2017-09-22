@@ -3,6 +3,7 @@ package org.eclipse.dsp4e.debugmodel;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -53,8 +54,8 @@ final class Thread implements IThread {
 	public void stepOver() throws DebugException {
 		ReadmeDebugTarget
 				.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(body.threads[i].id)));
-		debugTarget.fireResumeEvent(0);
-		debugTarget.fireSuspendEvent(0);
+		debugTarget.fireResumeEvent(DebugEvent.UNSPECIFIED);
+		debugTarget.fireSuspendEvent(DebugEvent.UNSPECIFIED);
 	}
 
 	@Override

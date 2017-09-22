@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -19,8 +20,10 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.dsp4j.DebugProtocol.ContinuedEvent;
 import org.eclipse.dsp4j.DebugProtocol.DisconnectArguments;
 import org.eclipse.dsp4j.DebugProtocol.InitializeRequestArguments;
+import org.eclipse.dsp4j.DebugProtocol.StoppedEvent;
 import org.eclipse.dsp4j.DebugProtocol.TerminatedEvent;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
 import org.eclipse.dsp4j.DebugProtocol.VariablesArguments;
@@ -36,6 +39,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 
 	// terminated state
 	private boolean fTerminated = false;
+	private boolean fSuspended = false;
 
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
@@ -56,12 +60,14 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 				.setAdapterID((String) launchArguments.get("type")).setPathFormat("path")));
 
 		// setBreakpoints({"source":{"path":"/scratch/debug/examples/mockdebug/readme.md","name":"readme.md"},"lines":[2],"breakpoints":[{"line":2}],"sourceModified":false})
-//		getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
-//				.setSource(new Source().setPath("/scratch/debug/examples/mockdebug/readme.md").setName("readme.md"))
-//				.setLines(new Integer[] { 3 })
-//				.setBreakpoints(
-//						new DebugProtocol.SourceBreakpoint[] { new DebugProtocol.SourceBreakpoint().setLine(3) })
-//				.setSourceModified(false)));
+		// getAndPrint(debugProtocolServer.setBreakpoints(new SetBreakpointsArguments()
+		// .setSource(new
+		// Source().setPath("/scratch/debug/examples/mockdebug/readme.md").setName("readme.md"))
+		// .setLines(new Integer[] { 3 })
+		// .setBreakpoints(
+		// new DebugProtocol.SourceBreakpoint[] { new
+		// DebugProtocol.SourceBreakpoint().setLine(3) })
+		// .setSourceModified(false)));
 
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
 		getAndPrint(debugProtocolServer.configurationDone());
@@ -133,6 +139,9 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 	}
 
 	@Override
+	/*
+	 * 
+	 */
 	public void terminated(TerminatedEvent.Body body) {
 		fTerminated = true;
 		fireTerminateEvent();
@@ -146,18 +155,46 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 	}
 
 	@Override
+	public void continued(ContinuedEvent.Body body) {
+		fSuspended = false;
+		fireResumeEvent(DebugEvent.UNSPECIFIED);
+	}
+	
+	@Override
+	public void stopped(StoppedEvent.Body body) {
+		fSuspended = true;
+		fireSuspendEvent(calcDetail(body.reason));
+	}
+
+	private int calcDetail(String reason) {
+		if (reason.equals("breakpoint")) { //$NON-NLS-1$
+			return DebugEvent.BREAKPOINT;
+		} else if (reason.equals("step")) { //$NON-NLS-1$
+			return DebugEvent.STEP_OVER;
+//		} else if (reason.equals("exception")) { //$NON-NLS-1$
+//			return DebugEvent.STEP_RETURN;
+		} else if (reason.equals("pause")) { //$NON-NLS-1$
+			return DebugEvent.CLIENT_REQUEST;
+//		} else if (reason.equals("event")) { //$NON-NLS-1$
+//			return DebugEvent.BREAKPOINT;
+		} else {
+			return DebugEvent.UNSPECIFIED;
+		}
+	}
+
+	@Override
 	public boolean canResume() {
-		return false;
+		return !isTerminated() && isSuspended();
 	}
 
 	@Override
 	public boolean canSuspend() {
-		return false;
+		return !isTerminated() && !isSuspended();
 	}
 
 	@Override
 	public boolean isSuspended() {
-		return false;
+		return fSuspended;
 	}
 
 	@Override
