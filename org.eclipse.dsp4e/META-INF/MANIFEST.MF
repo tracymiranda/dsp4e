@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Readme Mock Debug
+Bundle-Name: Generic Debug Adapter Debugger
 Bundle-SymbolicName: org.eclipse.dsp4e;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.dsp4e.DSPPlugin
