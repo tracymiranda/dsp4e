@@ -2,7 +2,6 @@ package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class ReadmeLaunchDelegate implements ILaunchConfigurationDelegate {
+public class DSPLaunchDelegate implements ILaunchConfigurationDelegate {
 
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)

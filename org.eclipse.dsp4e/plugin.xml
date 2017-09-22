@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.eclipse.dsp4e.launcher.ReadmeLaunchDelegate"
+            delegate="org.eclipse.dsp4e.launcher.DSPLaunchDelegate"
             id="dsp.launchType"
             modes="debug"
             name="Debug Adapter Launcher"
