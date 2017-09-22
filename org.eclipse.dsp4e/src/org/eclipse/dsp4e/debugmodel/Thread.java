@@ -19,12 +19,12 @@ final class Thread implements IThread {
 	/**
 	 *
 	 */
-	private final ReadmeDebugTarget debugTarget;
+	private final DebugTarget debugTarget;
 	private final Body body;
 	private final IThread[] threads;
 	private final int i;
 
-	public Thread(ReadmeDebugTarget readmeDebugTarget, Body body, IThread[] threads, int i) {
+	public Thread(DebugTarget readmeDebugTarget, Body body, IThread[] threads, int i) {
 		debugTarget = readmeDebugTarget;
 		this.body = body;
 		this.threads = threads;
@@ -52,7 +52,7 @@ final class Thread implements IThread {
 
 	@Override
 	public void stepOver() throws DebugException {
-		ReadmeDebugTarget
+		DebugTarget
 				.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(body.threads[i].id)));
 		debugTarget.fireResumeEvent(DebugEvent.UNSPECIFIED);
 		debugTarget.fireSuspendEvent(DebugEvent.UNSPECIFIED);
@@ -88,7 +88,7 @@ final class Thread implements IThread {
 
 	@Override
 	public void resume() throws DebugException {
-		ReadmeDebugTarget.getAndPrint(
+		DebugTarget.getAndPrint(
 				debugTarget.debugProtocolServer.continue_(new ContinueArguments().setThreadId(body.threads[i].id)));
 		debugTarget.fireResumeEvent(0);
 	}

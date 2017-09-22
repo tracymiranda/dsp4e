@@ -13,7 +13,7 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.IDebugEditorPresentation;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IValueDetailListener;
-import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.debugmodel.DebugTarget;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -25,8 +25,8 @@ public class DSPDebugModelPresentation extends LabelProvider implements IDebugMo
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof ReadmeDebugTarget) {
-			return getTargetText((ReadmeDebugTarget) element);
+		if (element instanceof DebugTarget) {
+			return getTargetText((DebugTarget) element);
 		}
 		return DebugUIPlugin.getDefaultLabelProvider().getText(element);
 	}
@@ -38,7 +38,7 @@ public class DSPDebugModelPresentation extends LabelProvider implements IDebugMo
 	 *            debug target
 	 * @return a label for the given debug target
 	 */
-	private String getTargetText(ReadmeDebugTarget target) {
+	private String getTargetText(DebugTarget target) {
 		// try {
 		// String pgmPath =
 		// target.getLaunch().getLaunchConfiguration().getAttribute(DebugCorePlugin.ATTR_PDA_PROGRAM,

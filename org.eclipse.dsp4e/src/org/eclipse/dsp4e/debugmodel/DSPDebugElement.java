@@ -3,9 +3,9 @@ package org.eclipse.dsp4e.debugmodel;
 import org.eclipse.debug.core.model.DebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 
-public class MockDebugElement extends DebugElement {
+public class DSPDebugElement extends DebugElement {
 
-	public MockDebugElement(IDebugTarget target) {
+	public DSPDebugElement(IDebugTarget target) {
 		super(target);
 	}
 

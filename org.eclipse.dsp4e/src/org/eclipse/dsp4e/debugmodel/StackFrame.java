@@ -12,13 +12,13 @@ public class StackFrame implements IStackFrame {
 	/**
 	 *
 	 */
-	private final ReadmeDebugTarget debugTarget;
+	private final DebugTarget debugTarget;
 	private final org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2;
 	private final int i;
 	private final int f;
 	private final IThread[] threads;
 
-	public StackFrame(ReadmeDebugTarget readmeDebugTarget,
+	public StackFrame(DebugTarget readmeDebugTarget,
 			org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2, int i, int f, IThread[] threads) {
 		debugTarget = readmeDebugTarget;
 		this.body2 = body2;

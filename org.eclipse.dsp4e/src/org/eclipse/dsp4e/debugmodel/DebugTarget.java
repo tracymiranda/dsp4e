@@ -32,7 +32,7 @@ import org.eclipse.dsp4j.IDebugProtocolServer;
 import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
-public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget, IDebugProtocolClient {
+public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebugProtocolClient {
 
 	private ILaunch launch;
 	private Process process;
@@ -44,7 +44,7 @@ public class ReadmeDebugTarget extends MockDebugElement implements IDebugTarget,
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
 
-	public ReadmeDebugTarget(ILaunch launch, Process process, InputStream in, OutputStream out,
+	public DebugTarget(ILaunch launch, Process process, InputStream in, OutputStream out,
 			Map<String, Object> launchArguments) throws CoreException {
 		super(null);
 		this.launch = launch;

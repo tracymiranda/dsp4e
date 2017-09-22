@@ -16,7 +16,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.dsp4e.DSPPlugin;
-import org.eclipse.dsp4e.debugmodel.ReadmeDebugTarget;
+import org.eclipse.dsp4e.debugmodel.DebugTarget;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -51,7 +51,7 @@ public class DSPLaunchDelegate implements ILaunchConfigurationDelegate {
 			// Socket process = new Socket("127.0.0.1", 4711);
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				target = new ReadmeDebugTarget(launch, process, process.getInputStream(), process.getOutputStream(),
+				target = new DebugTarget(launch, process, process.getInputStream(), process.getOutputStream(),
 						launchArguments);
 				launch.addDebugTarget(target);
 			}
