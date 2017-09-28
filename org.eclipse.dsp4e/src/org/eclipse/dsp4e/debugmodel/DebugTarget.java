@@ -3,6 +3,7 @@ package org.eclipse.dsp4e.debugmodel;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -37,9 +38,9 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 	private ILaunch launch;
 	private Process process;
 
-	// terminated state
 	private boolean fTerminated = false;
 	private boolean fSuspended = false;
+	private String targetName = null;
 
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
@@ -68,6 +69,8 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 		// new DebugProtocol.SourceBreakpoint[] { new
 		// DebugProtocol.SourceBreakpoint().setLine(3) })
 		// .setSourceModified(false)));
+		Object object = launchArguments.get("program");
+		targetName = Objects.toString(object, "Debug Adapter Target");
 
 		getAndPrint(debugProtocolServer.launch(Either.forLeft(launchArguments)));
 		getAndPrint(debugProtocolServer.configurationDone());
@@ -159,7 +162,7 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 		fSuspended = false;
 		fireResumeEvent(DebugEvent.UNSPECIFIED);
 	}
-	
+
 	@Override
 	public void stopped(StoppedEvent.Body body) {
 		fSuspended = true;
@@ -171,12 +174,12 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 			return DebugEvent.BREAKPOINT;
 		} else if (reason.equals("step")) { //$NON-NLS-1$
 			return DebugEvent.STEP_OVER;
-//		} else if (reason.equals("exception")) { //$NON-NLS-1$
-//			return DebugEvent.STEP_RETURN;
+			// } else if (reason.equals("exception")) { //$NON-NLS-1$
+			// return DebugEvent.STEP_RETURN;
 		} else if (reason.equals("pause")) { //$NON-NLS-1$
 			return DebugEvent.CLIENT_REQUEST;
-//		} else if (reason.equals("event")) { //$NON-NLS-1$
-//			return DebugEvent.BREAKPOINT;
+			// } else if (reason.equals("event")) { //$NON-NLS-1$
+			// return DebugEvent.BREAKPOINT;
 		} else {
 			return DebugEvent.UNSPECIFIED;
 		}
@@ -269,8 +272,8 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 	}
 
 	@Override
-	public String getName() throws DebugException {
-		return "Readme Mock Debug";
+	public String getName() {
+		return targetName;
 	}
 
 	@Override
