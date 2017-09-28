@@ -1,25 +1,21 @@
 package org.eclipse.dsp4e.debugmodel;
 
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body;
 
-public class StackFrame implements IStackFrame {
+public class StackFrame extends DSPDebugElement implements IStackFrame {
 	private Thread thread;
 	private org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame;
+	private int depth;
 
-	/**
-	 *
-	 */
-
-	public StackFrame(Thread thread, org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame) {
+	public StackFrame(Thread thread, org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame, int depth) {
+		super(thread.getDebugTarget());
 		this.thread = thread;
 		this.stackFrame = stackFrame;
+		this.depth = depth;
 	}
 
 	@Override
@@ -39,8 +35,6 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public void suspend() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -50,13 +44,11 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public boolean isSuspended() {
-		// TODO Auto-generated method stub
 		return getDebugTarget().isSuspended();
 	}
 
 	@Override
 	public boolean canSuspend() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -67,8 +59,6 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public void stepReturn() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -78,19 +68,15 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public void stepInto() throws DebugException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isStepping() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean canStepReturn() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -101,34 +87,11 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public boolean canStepInto() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-		System.out.println("StackFrame adapters: " + adapter);
-		return null;
-	}
-
-	@Override
-	public String getModelIdentifier() {
-		return getDebugTarget().getModelIdentifier();
-	}
-
-	@Override
-	public ILaunch getLaunch() {
-		return getDebugTarget().getLaunch();
-	}
-
-	@Override
-	public IDebugTarget getDebugTarget() {
-		return getThread().getDebugTarget();
-	}
-
-	@Override
 	public boolean hasVariables() throws DebugException {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -139,7 +102,6 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public IVariable[] getVariables() throws DebugException {
-		// TODO Auto-generated method stub
 		IVariable[] myArr = new IVariable[2];
 		DebugVariable debugVariable = new DebugVariable("Art");
 		DebugVariable debugVariable2 = new DebugVariable("KC");
@@ -155,7 +117,6 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public IRegisterGroup[] getRegisterGroups() throws DebugException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -180,7 +141,6 @@ public class StackFrame implements IStackFrame {
 	}
 
 	public String getSourceName() {
-		// TODO implement sourcereferences
 		return stackFrame.source.path;
 	}
 
@@ -188,7 +148,7 @@ public class StackFrame implements IStackFrame {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((stackFrame == null) ? 0 : stackFrame.hashCode());
+		result = prime * result + depth;
 		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
 		return result;
 	}
@@ -202,10 +162,7 @@ public class StackFrame implements IStackFrame {
 		if (getClass() != obj.getClass())
 			return false;
 		StackFrame other = (StackFrame) obj;
-		if (stackFrame == null) {
-			if (other.stackFrame != null)
-				return false;
-		} else if (!stackFrame.equals(other.stackFrame))
+		if (depth != other.depth)
 			return false;
 		if (thread == null) {
 			if (other.thread != null)
@@ -214,6 +171,7 @@ public class StackFrame implements IStackFrame {
 			return false;
 		return true;
 	}
+
 
 	
 }

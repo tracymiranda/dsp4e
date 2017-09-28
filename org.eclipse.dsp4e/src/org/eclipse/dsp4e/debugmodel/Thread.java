@@ -7,36 +7,33 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.dsp4j.DebugProtocol.ContinueArguments;
 import org.eclipse.dsp4j.DebugProtocol.NextArguments;
 import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
-import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
 
-public class Thread implements IThread {
-	private final DebugTarget debugTarget;
+public class Thread extends DSPDebugElement implements IThread {
 	private final org.eclipse.dsp4j.DebugProtocol.Thread thread;
 
 	public Thread(DebugTarget debugTarget, org.eclipse.dsp4j.DebugProtocol.Thread thread) {
-		this.debugTarget = debugTarget;
+		super(debugTarget);
 		this.thread = thread;
 	}
 
 	@Override
 	public void terminate() throws DebugException {
-		debugTarget.terminate();
+		getDebugTarget().terminate();
 	}
 
 	@Override
 	public boolean isTerminated() {
-		return debugTarget.isTerminated();
+		return getDebugTarget().isTerminated();
 	}
 
 	@Override
 	public boolean canTerminate() {
-		return debugTarget.canTerminate();
+		return getDebugTarget().canTerminate();
 	}
 
 	@Override
@@ -45,9 +42,10 @@ public class Thread implements IThread {
 
 	@Override
 	public void stepOver() throws DebugException {
-		DebugTarget.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(thread.id)));
-		debugTarget.fireResumeEvent(DebugEvent.STEP_OVER);
-		debugTarget.fireSuspendEvent(DebugEvent.STEP_OVER);
+		DebugTarget.getAndPrint(getDebugTarget().debugProtocolServer.next(new NextArguments().setThreadId(thread.id)));
+		//TODO: move this to after getting response...
+		getDebugTarget().fireResumeEvent(DebugEvent.STEP_OVER);
+		getDebugTarget().fireSuspendEvent(DebugEvent.STEP_OVER);
 	}
 
 	@Override
@@ -81,8 +79,8 @@ public class Thread implements IThread {
 	@Override
 	public void resume() throws DebugException {
 		DebugTarget
-				.getAndPrint(debugTarget.debugProtocolServer.continue_(new ContinueArguments().setThreadId(thread.id)));
-		debugTarget.fireResumeEvent(0);
+				.getAndPrint(getDebugTarget().debugProtocolServer.continue_(new ContinueArguments().setThreadId(thread.id)));
+		getDebugTarget().fireResumeEvent(0);
 	}
 
 	@Override
@@ -100,24 +98,15 @@ public class Thread implements IThread {
 		return true;
 	}
 
-	@Override
-	public <T> T getAdapter(Class<T> adapter) {
-		return null;
-	}
 
 	@Override
 	public String getModelIdentifier() {
-		return debugTarget.getModelIdentifier();
+		return getDebugTarget().getModelIdentifier();
 	}
 
 	@Override
 	public ILaunch getLaunch() {
-		return debugTarget.getLaunch();
-	}
-
-	@Override
-	public IDebugTarget getDebugTarget() {
-		return debugTarget;
+		return getDebugTarget().getLaunch();
 	}
 
 	@Override
@@ -132,17 +121,17 @@ public class Thread implements IThread {
 
 	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
-		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = debugTarget.debugProtocolServer
+		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = getDebugTarget().debugProtocolServer
 				.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20));
 		org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body stackTraceResposeBody;
 		try {
 			stackTraceResposeBody = future.get();
 		} catch (InterruptedException | ExecutionException e) {
-			throw debugTarget.newTargetRequestFailedException("Can't get frames", e);
+			throw getDebugTarget().newTargetRequestFailedException("Can't get frames", e);
 		}
 		IStackFrame[] frames = new IStackFrame[stackTraceResposeBody.stackFrames.length];
 		for (int i = 0; i < frames.length; i++) {
-			frames[i] = new StackFrame(this, stackTraceResposeBody.stackFrames[i]);
+			frames[i] = new StackFrame(this, stackTraceResposeBody.stackFrames[i], i);
 		}
 
 		return frames;
@@ -167,7 +156,7 @@ public class Thread implements IThread {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((debugTarget == null) ? 0 : debugTarget.hashCode());
+		result = prime * result + ((getDebugTarget() == null) ? 0 : getDebugTarget().hashCode());
 		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
 		return result;
 	}
@@ -181,10 +170,10 @@ public class Thread implements IThread {
 		if (getClass() != obj.getClass())
 			return false;
 		Thread other = (Thread) obj;
-		if (debugTarget == null) {
-			if (other.debugTarget != null)
+		if (getDebugTarget() == null) {
+			if (other.getDebugTarget() != null)
 				return false;
-		} else if (!debugTarget.equals(other.debugTarget))
+		} else if (!getDebugTarget().equals(other.getDebugTarget()))
 			return false;
 		if (thread == null) {
 			if (other.thread != null)

@@ -11,11 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -138,13 +135,8 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 		throw newTargetRequestFailedException(message, e);
 	}
 
-	DebugException newTargetRequestFailedException(String message, Throwable e) {
-		return new DebugException(new Status(IStatus.ERROR, DebugPlugin.getUniqueIdentifier(),
-				DebugException.TARGET_REQUEST_FAILED, message, e));
-	}
-
 	@Override
-	public IDebugTarget getDebugTarget() {
+	public DebugTarget getDebugTarget() {
 		return this;
 	}
 
