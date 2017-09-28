@@ -3539,6 +3539,38 @@ public class DebugProtocol {
 				+ ", name=" + name
 			 + "]";
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((id == null) ? 0 : id.hashCode());
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Thread other = (Thread) obj;
+			if (id == null) {
+				if (other.id != null)
+					return false;
+			} else if (!id.equals(other.id))
+				return false;
+			if (name == null) {
+				if (other.name != null)
+					return false;
+			} else if (!name.equals(other.name))
+				return false;
+			return true;
+		}
+		
 	}
 
 	/** A Source is a descriptor for source code. It is returned from the debug adapter as part of a StackFrame and it is used by clients when specifying breakpoints. */
@@ -3604,6 +3636,67 @@ public class DebugProtocol {
 				+ ", checksums=" + Arrays.toString(checksums)
 			 + "]";
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((adapterData == null) ? 0 : adapterData.hashCode());
+			result = prime * result + Arrays.hashCode(checksums);
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			result = prime * result + ((origin == null) ? 0 : origin.hashCode());
+			result = prime * result + ((path == null) ? 0 : path.hashCode());
+			result = prime * result + ((presentationHint == null) ? 0 : presentationHint.hashCode());
+			result = prime * result + ((sourceReference == null) ? 0 : sourceReference.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Source other = (Source) obj;
+			if (adapterData == null) {
+				if (other.adapterData != null)
+					return false;
+			} else if (!adapterData.equals(other.adapterData))
+				return false;
+			if (!Arrays.equals(checksums, other.checksums))
+				return false;
+			if (name == null) {
+				if (other.name != null)
+					return false;
+			} else if (!name.equals(other.name))
+				return false;
+			if (origin == null) {
+				if (other.origin != null)
+					return false;
+			} else if (!origin.equals(other.origin))
+				return false;
+			if (path == null) {
+				if (other.path != null)
+					return false;
+			} else if (!path.equals(other.path))
+				return false;
+			if (presentationHint == null) {
+				if (other.presentationHint != null)
+					return false;
+			} else if (!presentationHint.equals(other.presentationHint))
+				return false;
+			if (sourceReference == null) {
+				if (other.sourceReference != null)
+					return false;
+			} else if (!sourceReference.equals(other.sourceReference))
+				return false;
+			return true;
+		}
+		
+		
+		
 	}
 
 	/** A Stackframe contains the source location. */
@@ -3685,6 +3778,81 @@ public class DebugProtocol {
 				+ ", presentationHint=" + presentationHint
 			 + "]";
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((column == null) ? 0 : column.hashCode());
+			result = prime * result + ((endColumn == null) ? 0 : endColumn.hashCode());
+			result = prime * result + ((endLine == null) ? 0 : endLine.hashCode());
+			result = prime * result + ((id == null) ? 0 : id.hashCode());
+			result = prime * result + ((line == null) ? 0 : line.hashCode());
+			result = prime * result + ((moduleId == null) ? 0 : moduleId.hashCode());
+			result = prime * result + ((name == null) ? 0 : name.hashCode());
+			result = prime * result + ((presentationHint == null) ? 0 : presentationHint.hashCode());
+			result = prime * result + ((source == null) ? 0 : source.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			StackFrame other = (StackFrame) obj;
+			if (column == null) {
+				if (other.column != null)
+					return false;
+			} else if (!column.equals(other.column))
+				return false;
+			if (endColumn == null) {
+				if (other.endColumn != null)
+					return false;
+			} else if (!endColumn.equals(other.endColumn))
+				return false;
+			if (endLine == null) {
+				if (other.endLine != null)
+					return false;
+			} else if (!endLine.equals(other.endLine))
+				return false;
+			if (id == null) {
+				if (other.id != null)
+					return false;
+			} else if (!id.equals(other.id))
+				return false;
+			if (line == null) {
+				if (other.line != null)
+					return false;
+			} else if (!line.equals(other.line))
+				return false;
+			if (moduleId == null) {
+				if (other.moduleId != null)
+					return false;
+			} else if (!moduleId.equals(other.moduleId))
+				return false;
+			if (name == null) {
+				if (other.name != null)
+					return false;
+			} else if (!name.equals(other.name))
+				return false;
+			if (presentationHint == null) {
+				if (other.presentationHint != null)
+					return false;
+			} else if (!presentationHint.equals(other.presentationHint))
+				return false;
+			if (source == null) {
+				if (other.source != null)
+					return false;
+			} else if (!source.equals(other.source))
+				return false;
+			return true;
+		}
+		
+		
 	}
 
 	/** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
@@ -4176,6 +4344,36 @@ public class DebugProtocol {
 				+ ", checksum=" + checksum
 			 + "]";
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((algorithm == null) ? 0 : algorithm.hashCode());
+			result = prime * result + ((checksum == null) ? 0 : checksum.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Checksum other = (Checksum) obj;
+			if (algorithm != other.algorithm)
+				return false;
+			if (checksum == null) {
+				if (other.checksum != null)
+					return false;
+			} else if (!checksum.equals(other.checksum))
+				return false;
+			return true;
+		}
+		
+		
 	}
 
 	/** Provides formatting information for a value. */

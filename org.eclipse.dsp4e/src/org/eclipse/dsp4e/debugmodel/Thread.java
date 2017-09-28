@@ -15,20 +15,13 @@ import org.eclipse.dsp4j.DebugProtocol.NextArguments;
 import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
 import org.eclipse.dsp4j.DebugProtocol.ThreadsResponse.Body;
 
-final class Thread implements IThread {
-	/**
-	 *
-	 */
+public class Thread implements IThread {
 	private final DebugTarget debugTarget;
-	private final Body body;
-	private final IThread[] threads;
-	private final int i;
+	private final org.eclipse.dsp4j.DebugProtocol.Thread thread;
 
-	public Thread(DebugTarget readmeDebugTarget, Body body, IThread[] threads, int i) {
-		debugTarget = readmeDebugTarget;
-		this.body = body;
-		this.threads = threads;
-		this.i = i;
+	public Thread(DebugTarget debugTarget, org.eclipse.dsp4j.DebugProtocol.Thread thread) {
+		this.debugTarget = debugTarget;
+		this.thread = thread;
 	}
 
 	@Override
@@ -52,10 +45,9 @@ final class Thread implements IThread {
 
 	@Override
 	public void stepOver() throws DebugException {
-		DebugTarget
-				.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(body.threads[i].id)));
-		debugTarget.fireResumeEvent(DebugEvent.UNSPECIFIED);
-		debugTarget.fireSuspendEvent(DebugEvent.UNSPECIFIED);
+		DebugTarget.getAndPrint(debugTarget.debugProtocolServer.next(new NextArguments().setThreadId(thread.id)));
+		debugTarget.fireResumeEvent(DebugEvent.STEP_OVER);
+		debugTarget.fireSuspendEvent(DebugEvent.STEP_OVER);
 	}
 
 	@Override
@@ -88,14 +80,14 @@ final class Thread implements IThread {
 
 	@Override
 	public void resume() throws DebugException {
-		DebugTarget.getAndPrint(
-				debugTarget.debugProtocolServer.continue_(new ContinueArguments().setThreadId(body.threads[i].id)));
+		DebugTarget
+				.getAndPrint(debugTarget.debugProtocolServer.continue_(new ContinueArguments().setThreadId(thread.id)));
 		debugTarget.fireResumeEvent(0);
 	}
 
 	@Override
 	public boolean isSuspended() {
-		return false;
+		return getDebugTarget().isSuspended();
 	}
 
 	@Override
@@ -142,20 +134,18 @@ final class Thread implements IThread {
 	public IStackFrame[] getStackFrames() throws DebugException {
 		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = debugTarget.debugProtocolServer
 				.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20));
-		org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2;
+		org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body stackTraceResposeBody;
 		try {
-			body2 = future.get();
+			stackTraceResposeBody = future.get();
 		} catch (InterruptedException | ExecutionException e) {
 			throw debugTarget.newTargetRequestFailedException("Can't get frames", e);
 		}
-		IStackFrame[] frames = new IStackFrame[body2.stackFrames.length];
-		for (int iv = 0; iv < frames.length; iv++) {
-			final int f = iv;
-			frames[f] = new StackFrame(debugTarget, body2, i, f, threads);
+		IStackFrame[] frames = new IStackFrame[stackTraceResposeBody.stackFrames.length];
+		for (int i = 0; i < frames.length; i++) {
+			frames[i] = new StackFrame(this, stackTraceResposeBody.stackFrames[i]);
 		}
 
 		return frames;
-
 	}
 
 	@Override
@@ -165,11 +155,44 @@ final class Thread implements IThread {
 
 	@Override
 	public String getName() throws DebugException {
-		return body.threads[i].name;
+		return thread.name;
 	}
 
 	@Override
 	public IBreakpoint[] getBreakpoints() {
 		return new IBreakpoint[0];
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((debugTarget == null) ? 0 : debugTarget.hashCode());
+		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Thread other = (Thread) obj;
+		if (debugTarget == null) {
+			if (other.debugTarget != null)
+				return false;
+		} else if (!debugTarget.equals(other.debugTarget))
+			return false;
+		if (thread == null) {
+			if (other.thread != null)
+				return false;
+		} else if (!thread.equals(other.thread))
+			return false;
+		return true;
+	}
+	
+	
 }

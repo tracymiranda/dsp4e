@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
@@ -34,6 +35,30 @@ import org.eclipse.lsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 
 public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebugProtocolClient {
+	private static AtomicInteger count = new AtomicInteger();
+	private int id = count.getAndIncrement();
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DebugTarget other = (DebugTarget) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
 
 	private ILaunch launch;
 	private Process process;
@@ -41,6 +66,8 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 	private boolean fTerminated = false;
 	private boolean fSuspended = false;
 	private String targetName = null;
+
+	private IThread[] threads;
 
 	private Future<?> debugProtocolFuture;
 	IDebugProtocolServer debugProtocolServer;
@@ -258,10 +285,9 @@ public class DebugTarget extends DSPDebugElement implements IDebugTarget, IDebug
 		} catch (InterruptedException | ExecutionException e) {
 			throw newTargetRequestFailedException("Can't get threads", e);
 		}
-		IThread[] threads = new IThread[body.threads.length];
-		for (int iv = 0; iv < threads.length; iv++) {
-			final int i = iv;
-			threads[i] = new Thread(this, body, threads, i);
+		threads = new IThread[body.threads.length];
+		for (int i = 0; i < threads.length; i++) {
+			threads[i] = new Thread(this, body.threads[i]);
 		}
 		return threads;
 	}

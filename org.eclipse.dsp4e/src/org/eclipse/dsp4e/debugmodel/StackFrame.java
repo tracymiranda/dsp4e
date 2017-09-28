@@ -7,39 +7,34 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body;
 
 public class StackFrame implements IStackFrame {
+	private Thread thread;
+	private org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame;
+
 	/**
 	 *
 	 */
-	private final DebugTarget debugTarget;
-	private final org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2;
-	private final int i;
-	private final int f;
-	private final IThread[] threads;
 
-	public StackFrame(DebugTarget readmeDebugTarget,
-			org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body body2, int i, int f, IThread[] threads) {
-		debugTarget = readmeDebugTarget;
-		this.body2 = body2;
-		this.i = i;
-		this.f = f;
-		this.threads = threads;
+	public StackFrame(Thread thread, org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame) {
+		this.thread = thread;
+		this.stackFrame = stackFrame;
 	}
 
 	@Override
 	public void terminate() throws DebugException {
-		debugTarget.terminate();
+		getDebugTarget().terminate();
 	}
 
 	@Override
 	public boolean isTerminated() {
-		return debugTarget.isTerminated();
+		return getDebugTarget().isTerminated();
 	}
 
 	@Override
 	public boolean canTerminate() {
-		return debugTarget.canTerminate();
+		return getDebugTarget().canTerminate();
 	}
 
 	@Override
@@ -56,7 +51,7 @@ public class StackFrame implements IStackFrame {
 	@Override
 	public boolean isSuspended() {
 		// TODO Auto-generated method stub
-		return false;
+		return getDebugTarget().isSuspended();
 	}
 
 	@Override
@@ -118,18 +113,17 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public String getModelIdentifier() {
-		return debugTarget.getModelIdentifier();
+		return getDebugTarget().getModelIdentifier();
 	}
 
 	@Override
 	public ILaunch getLaunch() {
-		return debugTarget.getLaunch();
+		return getDebugTarget().getLaunch();
 	}
 
 	@Override
 	public IDebugTarget getDebugTarget() {
-		// TODO Auto-generated method stub
-		return debugTarget;
+		return getThread().getDebugTarget();
 	}
 
 	@Override
@@ -140,7 +134,6 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public boolean hasRegisterGroups() throws DebugException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -157,8 +150,7 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public IThread getThread() {
-		// TODO Auto-generated method stub
-		return threads[i];
+		return thread;
 	}
 
 	@Override
@@ -169,12 +161,12 @@ public class StackFrame implements IStackFrame {
 
 	@Override
 	public String getName() throws DebugException {
-		return body2.stackFrames[f].name;
+		return stackFrame.name;
 	}
 
 	@Override
 	public int getLineNumber() throws DebugException {
-		return body2.stackFrames[f].line;
+		return stackFrame.line;
 	}
 
 	@Override
@@ -189,6 +181,39 @@ public class StackFrame implements IStackFrame {
 
 	public String getSourceName() {
 		// TODO implement sourcereferences
-		return body2.stackFrames[f].source.path;
+		return stackFrame.source.path;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((stackFrame == null) ? 0 : stackFrame.hashCode());
+		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StackFrame other = (StackFrame) obj;
+		if (stackFrame == null) {
+			if (other.stackFrame != null)
+				return false;
+		} else if (!stackFrame.equals(other.stackFrame))
+			return false;
+		if (thread == null) {
+			if (other.thread != null)
+				return false;
+		} else if (!thread.equals(other.thread))
+			return false;
+		return true;
+	}
+
+	
 }
