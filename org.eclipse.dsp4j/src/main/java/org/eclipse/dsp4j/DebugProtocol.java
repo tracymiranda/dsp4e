@@ -1205,7 +1205,7 @@ public class DebugProtocol {
 
 		/** The code locations of the breakpoints. */
 		public SourceBreakpoint[] breakpoints;
-		public SetBreakpointsArguments setBreakpoints(SourceBreakpoint[] breakpoints) {
+		public SetBreakpointsArguments setBreakpoints(SourceBreakpoint... breakpoints) {
 			this.breakpoints = breakpoints;
 			return this;
 		}
@@ -1303,7 +1303,7 @@ public class DebugProtocol {
 	public static class SetFunctionBreakpointsArguments {
 		/** The function names of the breakpoints. */
 		public FunctionBreakpoint[] breakpoints;
-		public SetFunctionBreakpointsArguments setBreakpoints(FunctionBreakpoint[] breakpoints) {
+		public SetFunctionBreakpointsArguments setBreakpoints(FunctionBreakpoint... breakpoints) {
 			this.breakpoints = breakpoints;
 			return this;
 		}
@@ -3349,9 +3349,9 @@ public class DebugProtocol {
 	/** A Module object represents a row in the modules view.
 		Two attributes are mandatory: an id identifies a module in the modules view and is used in a ModuleEvent for identifying a module for adding, updating or deleting.
 		The name is used to minimally render the module in the UI.
-		
+
 		Additional attributes can be added to the module. They will show up in the module View if they have a corresponding ColumnDescriptor.
-		
+
 		To avoid an unnecessary proliferation of additional attributes with similar semantics but different names
 		we recommend to re-use attributes from the 'recommended' list below first, and only introduce new attributes if nothing appropriate could be found.
 	*/
@@ -3372,7 +3372,7 @@ public class DebugProtocol {
 
 		/** optional but recommended attributes.
 			always try to use these first before introducing additional attributes.
-			
+
 			Logical full path to the module. The exact definition is implementation defined, but usually this would be a full path to the on-disk file for the module.
 		*/
 		public String path;
@@ -3570,7 +3570,7 @@ public class DebugProtocol {
 				return false;
 			return true;
 		}
-		
+
 	}
 
 	/** A Source is a descriptor for source code. It is returned from the debug adapter as part of a StackFrame and it is used by clients when specifying breakpoints. */
@@ -3694,9 +3694,9 @@ public class DebugProtocol {
 				return false;
 			return true;
 		}
-		
-		
-		
+
+
+
 	}
 
 	/** A Stackframe contains the source location. */
@@ -3851,8 +3851,8 @@ public class DebugProtocol {
 				return false;
 			return true;
 		}
-		
-		
+
+
 	}
 
 	/** A Scope is a named container for variables. Optionally a scope can map to a source or a range within a source. */
@@ -4372,8 +4372,8 @@ public class DebugProtocol {
 				return false;
 			return true;
 		}
-		
-		
+
+
 	}
 
 	/** Provides formatting information for a value. */
