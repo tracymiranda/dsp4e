@@ -17,7 +17,8 @@ public class DebugMessageJsonHandler extends MessageJsonHandler {
 	}
 
 	public DebugMessageJsonHandler(Map<String, JsonRpcMethod> supportedMethods, Consumer<GsonBuilder> configureGson) {
-		super(supportedMethods, configureGson);
+		super(supportedMethods);
+		// TODO support 0.3.0 by having configureGson not be ignored
 	}
 
 	public GsonBuilder getDefaultGsonBuilder() {

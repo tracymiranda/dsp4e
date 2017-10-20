@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.dsp4j.jsonrpc.DebugLauncher;
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.TypeAdapter;
@@ -70,6 +71,7 @@ public class DebugLauncherTest {
 		Assert.assertTrue(startListening.isCancelled());
 	}
 
+	@Ignore("Not support in 0.2.0 of jsonrpc")
 	@Test public void testCustomGson() throws Exception {
 		A a = new A() {
 			@Override
