@@ -1,24 +1,65 @@
 package org.eclipse.dsp4e.debugmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.dsp4j.DebugProtocol;
 import org.eclipse.dsp4j.DebugProtocol.ContinueArguments;
 import org.eclipse.dsp4j.DebugProtocol.NextArguments;
+import org.eclipse.dsp4j.DebugProtocol.StackFrame;
 import org.eclipse.dsp4j.DebugProtocol.StackTraceArguments;
+import org.eclipse.dsp4j.DebugProtocol.StackTraceResponse;
 
-public class Thread extends DSPDebugElement implements IThread {
-	private final org.eclipse.dsp4j.DebugProtocol.Thread thread;
+public class DSPThread extends DSPDebugElement implements IThread {
+	private final Integer id;
+	private String name;
+	private List<DSPStackFrame> frames;
 
-	public Thread(DebugTarget debugTarget, org.eclipse.dsp4j.DebugProtocol.Thread thread) {
+	public DSPThread(DSPDebugTarget debugTarget, DebugProtocol.Thread thread) {
 		super(debugTarget);
-		this.thread = thread;
+		this.id = thread.id;
+		this.name = thread.name;
+	}
+
+	/**
+	 * Update properties of the thread. The ID can't be changed, so the passed in
+	 * thread should match.
+	 * 
+	 * @param thread
+	 * @throws DebugException
+	 */
+	public void update(DebugProtocol.Thread thread) throws DebugException {
+		Assert.isTrue(Objects.equals(this.id, thread.id));
+		this.name = thread.name;
+		calculateFrames();
+	}
+
+	private void calculateFrames() throws DebugException {
+		if (frames == null) {
+			frames = new ArrayList<DSPStackFrame>();
+		}
+		CompletableFuture<StackTraceResponse.Body> future = getDebugTarget().debugProtocolServer
+				.stackTrace(new StackTraceArguments().setThreadId(id).setStartFrame(0).setLevels(20));
+		StackTraceResponse.Body stackTraceResposeBody = complete(future);
+
+		StackFrame[] backendFrames = stackTraceResposeBody.stackFrames;
+		for (int i = 0; i < backendFrames.length; i++) {
+			if (i < frames.size()) {
+				frames.set(i, frames.get(i).replace(backendFrames[i], i));
+			} else {
+				frames.add(new DSPStackFrame(this, backendFrames[i], i));
+			}
+		}
+		frames.subList(backendFrames.length, frames.size()).clear();
 	}
 
 	@Override
@@ -42,10 +83,10 @@ public class Thread extends DSPDebugElement implements IThread {
 
 	@Override
 	public void stepOver() throws DebugException {
-		DebugTarget.getAndPrint(getDebugTarget().debugProtocolServer.next(new NextArguments().setThreadId(thread.id)));
-		//TODO: move this to after getting response...
 		getDebugTarget().fireResumeEvent(DebugEvent.STEP_OVER);
-		getDebugTarget().fireSuspendEvent(DebugEvent.STEP_OVER);
+		complete(getDebugTarget().debugProtocolServer.next(new NextArguments().setThreadId(id)));
+		// TODO: move this to after getting response...
+		// getDebugTarget().fireSuspendEvent(DebugEvent.STEP_OVER);
 	}
 
 	@Override
@@ -78,8 +119,7 @@ public class Thread extends DSPDebugElement implements IThread {
 
 	@Override
 	public void resume() throws DebugException {
-		DebugTarget
-				.getAndPrint(getDebugTarget().debugProtocolServer.continue_(new ContinueArguments().setThreadId(thread.id)));
+		complete(getDebugTarget().debugProtocolServer.continue_(new ContinueArguments().setThreadId(id)));
 		getDebugTarget().fireResumeEvent(0);
 	}
 
@@ -98,7 +138,6 @@ public class Thread extends DSPDebugElement implements IThread {
 		return true;
 	}
 
-
 	@Override
 	public String getModelIdentifier() {
 		return getDebugTarget().getModelIdentifier();
@@ -116,25 +155,18 @@ public class Thread extends DSPDebugElement implements IThread {
 
 	@Override
 	public IStackFrame getTopStackFrame() throws DebugException {
-		return getStackFrames()[0];
+		if (frames == null) {
+			calculateFrames();
+		}
+		return frames.get(0);
 	}
 
 	@Override
 	public IStackFrame[] getStackFrames() throws DebugException {
-		CompletableFuture<org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body> future = getDebugTarget().debugProtocolServer
-				.stackTrace(new StackTraceArguments().setThreadId(1).setStartFrame(0).setLevels(20));
-		org.eclipse.dsp4j.DebugProtocol.StackTraceResponse.Body stackTraceResposeBody;
-		try {
-			stackTraceResposeBody = future.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw getDebugTarget().newTargetRequestFailedException("Can't get frames", e);
+		if (frames == null) {
+			calculateFrames();
 		}
-		IStackFrame[] frames = new IStackFrame[stackTraceResposeBody.stackFrames.length];
-		for (int i = 0; i < frames.length; i++) {
-			frames[i] = new StackFrame(this, stackTraceResposeBody.stackFrames[i], i);
-		}
-
-		return frames;
+		return frames.toArray(new IStackFrame[frames.size()]);
 	}
 
 	@Override
@@ -144,44 +176,11 @@ public class Thread extends DSPDebugElement implements IThread {
 
 	@Override
 	public String getName() throws DebugException {
-		return thread.name;
+		return name;
 	}
 
 	@Override
 	public IBreakpoint[] getBreakpoints() {
 		return new IBreakpoint[0];
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getDebugTarget() == null) ? 0 : getDebugTarget().hashCode());
-		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Thread other = (Thread) obj;
-		if (getDebugTarget() == null) {
-			if (other.getDebugTarget() != null)
-				return false;
-		} else if (!getDebugTarget().equals(other.getDebugTarget()))
-			return false;
-		if (thread == null) {
-			if (other.thread != null)
-				return false;
-		} else if (!thread.equals(other.thread))
-			return false;
-		return true;
-	}
-	
-	
 }

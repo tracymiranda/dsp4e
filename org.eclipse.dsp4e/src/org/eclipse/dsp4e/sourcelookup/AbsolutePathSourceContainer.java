@@ -13,7 +13,7 @@ public class AbsolutePathSourceContainer extends AbstractSourceContainer impleme
 	public Object[] findSourceElements(String name) throws CoreException {
 		if (name != null) {
 			if (Paths.get(name).isAbsolute()) {
-				return new Object[] {name};
+				return new Object[] { name };
 			}
 		}
 		return new Object[0];

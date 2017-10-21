@@ -1,21 +1,36 @@
 package org.eclipse.dsp4e.debugmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.dsp4j.DebugProtocol.Scope;
+import org.eclipse.dsp4j.DebugProtocol.ScopesArguments;
+import org.eclipse.dsp4j.DebugProtocol.StackFrame;
 
-public class StackFrame extends DSPDebugElement implements IStackFrame {
-	private Thread thread;
+public class DSPStackFrame extends DSPDebugElement implements IStackFrame {
+	private DSPThread thread;
 	private org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame;
 	private int depth;
 
-	public StackFrame(Thread thread, org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame, int depth) {
+	public DSPStackFrame(DSPThread thread, org.eclipse.dsp4j.DebugProtocol.StackFrame stackFrame, int depth) {
 		super(thread.getDebugTarget());
 		this.thread = thread;
 		this.stackFrame = stackFrame;
 		this.depth = depth;
+	}
+
+	public DSPStackFrame replace(StackFrame newStackFrame, int newDepth) {
+		if (newDepth == depth && Objects.equals(newStackFrame.source, stackFrame.source)) {
+			stackFrame = newStackFrame;
+			return this;
+		}
+		return new DSPStackFrame(thread, newStackFrame, newDepth);
 	}
 
 	@Override
@@ -102,12 +117,14 @@ public class StackFrame extends DSPDebugElement implements IStackFrame {
 
 	@Override
 	public IVariable[] getVariables() throws DebugException {
-		IVariable[] myArr = new IVariable[2];
-		DebugVariable debugVariable = new DebugVariable("Art");
-		DebugVariable debugVariable2 = new DebugVariable("KC");
-		myArr[1] = debugVariable2;
-		myArr[0] = debugVariable;
-		return myArr;
+		Scope[] scopes = complete(
+				getDebugTarget().debugProtocolServer.scopes(new ScopesArguments().setFrameId(stackFrame.id))).scopes;
+		List<DSPVariable> vars = new ArrayList<>();
+		for (Scope scope : scopes) {
+			DSPVariable variable = new DSPVariable(this, scope.variablesReference, scope.name, "");
+			vars.add(variable);
+		}
+		return vars.toArray(new IVariable[vars.size()]);
 	}
 
 	@Override
@@ -145,33 +162,9 @@ public class StackFrame extends DSPDebugElement implements IStackFrame {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + depth;
-		result = prime * result + ((thread == null) ? 0 : thread.hashCode());
-		return result;
+	public String toString() {
+		return "StackFrame [depth=" + depth + ", line=" + stackFrame.line + ", thread=" + thread + ", stackFrame="
+				+ stackFrame + "]";
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		StackFrame other = (StackFrame) obj;
-		if (depth != other.depth)
-			return false;
-		if (thread == null) {
-			if (other.thread != null)
-				return false;
-		} else if (!thread.equals(other.thread))
-			return false;
-		return true;
-	}
-
-
-	
 }

@@ -9,15 +9,15 @@ import org.osgi.framework.BundleContext;
 public class DSPPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.dsp4e.example.readme"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.dsp4e"; //$NON-NLS-1$
 
 	// Unique identifier for the DSP debug model launch config
 	public static final String ID_DSP_DEBUG_MODEL = "dsp.debugModel";
-	
+
 	// Launch configuration attribute keys
 	public static final String ATTR_DSP_CMD = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_CMD";
 	public static final String ATTR_DSP_ARGS = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_ARGS";
-	public static final String  ATTR_DSP_PARAM = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_PARAM";
+	public static final String ATTR_DSP_PARAM = ID_DSP_DEBUG_MODEL + ".ATTR_DSP_PARAM";
 
 	// The shared instance
 	private static DSPPlugin plugin;

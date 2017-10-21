@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde?>
+<!-- generated with https://github.com/mbarbero/fr.obeo.releng.targetplatform -->
+<target name="DSP4E Target Platform" sequenceNumber="1508616657">
+  <locations>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.platform.feature.group" version="4.7.1.v20171009-0410"/>
+      <unit id="org.eclipse.equinox.executable.feature.group" version="3.7.1.v20170928-1359"/>
+      <unit id="org.eclipse.e4.rcp.feature.group" version="1.6.1.v20170928-1359"/>
+      <unit id="org.eclipse.ui.trace" version="1.1.0.v20170201-2036"/>
+      <unit id="org.eclipse.pde.feature.group" version="3.13.1.v20171009-0537"/>
+      <repository id="oxygen-1a" location="http://download.eclipse.org/releases/oxygen/201710111001"/>
+    </location>
+    <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
+      <unit id="org.eclipse.lsp4e" version="0.3.0.201709111356"/>
+      <unit id="org.eclipse.lsp4j" version="0.3.0.v20170905-1252"/>
+      <unit id="org.eclipse.lsp4j.jsonrpc" version="0.3.0.v20170905-1252"/>
+      <repository id="lsp4e" location="http://download.eclipse.org/lsp4e/releases/0.3.0/"/>
+    </location>
+  </locations>
+</target>

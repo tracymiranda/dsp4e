@@ -1,7 +1,10 @@
 package org.eclipse.dsp4e.launcher;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 import org.eclipse.dsp4e.DSPPlugin;
-import org.eclipse.dsp4e.debugmodel.DebugTarget;
+import org.eclipse.dsp4e.debugmodel.DSPDebugTarget;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -47,12 +50,24 @@ public class DSPLaunchDelegate implements ILaunchConfigurationDelegate {
 		Map<String, Object> launchArguments = gson.fromJson(launchArgumentJson, type);
 
 		try {
-			Process process = processBuilder.start();
-			// Socket process = new Socket("127.0.0.1", 4711);
+
+			Process process;
+			InputStream inputStream;
+			OutputStream outputStream;
+			if (true) {
+				process = processBuilder.start();
+				inputStream = process.getInputStream();
+				outputStream = process.getOutputStream();
+			} else {
+				Socket socket = new Socket("127.0.0.1", 4711);
+				process = null;
+				inputStream = socket.getInputStream();
+				outputStream = socket.getOutputStream();
+
+			}
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				IDebugTarget target;
-				target = new DebugTarget(launch, process, process.getInputStream(), process.getOutputStream(),
-						launchArguments);
+				target = new DSPDebugTarget(launch, process, inputStream, outputStream, launchArguments);
 				launch.addDebugTarget(target);
 			}
 		} catch (IOException e1) {

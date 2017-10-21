@@ -52,5 +52,55 @@
             id="org.eclipse.dsp4e.sourcePathComputer">
       </sourcePathComputer>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.ui.DefaultTextEditor"
+            id="org.eclipse.dsp4e.textEditor.rulerActions">
+         <action
+               label="unusedlabel"
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               style="push"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.dsp4e.textEditor.doubleClickBreakpointAction"/>
+      </editorContribution>
+      <editorContribution
+            targetID="org.eclipse.ui.genericeditor.GenericEditor"
+            id="org.eclipse.dsp4e.genericEditor.rulerActions">
+         <action
+               label="unusedlabel"
+               class="org.eclipse.debug.ui.actions.RulerToggleBreakpointActionDelegate"
+               style="push"
+               actionID="RulerDoubleClick"
+               id="org.eclipse.dsp4e.genericEditor.doubleClickBreakpointAction"/>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            class="org.eclipse.dsp4e.breakpoints.DSPEditorAdapterFactory"
+            adaptableType="org.eclipse.ui.internal.genericeditor.ExtensionBasedTextEditor">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+      </factory>
+      <factory
+            class="org.eclipse.dsp4e.breakpoints.DSPEditorAdapterFactory"
+            adaptableType="org.eclipse.ui.editors.text.TextEditor">
+			<adapter type="org.eclipse.debug.ui.actions.IToggleBreakpointsTarget"/>
+      </factory>
+   </extension>
+   <extension
+         id="org.eclipse.dsp4e.breakpoints.markerType.lineBreakpoint"
+         name="DSP Line Breakpoint Marker"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.debug.core.lineBreakpointMarker"/>
+      <persistent value="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.breakpoints">
+      <breakpoint
+            class="org.eclipse.dsp4e.breakpoints.DSPLineBreakpoint"
+            name="DSP Line Breakpoint"
+            markerType="org.eclipse.dsp4e.breakpoints.markerType.lineBreakpoint"
+            id="org.eclipse.dsp4e.breakpoints.lineBreakpoint"/>
+   </extension>
 </plugin>

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dsp4j
+Bundle-SymbolicName: org.eclipse.dsp4j
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.dsp4j,
+ org.eclipse.dsp4j.json,
+ org.eclipse.dsp4j.jsonrpc
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.lsp4j.jsonrpc;bundle-version="0.3.0",
+ com.google.gson;bundle-version="2.7.0"

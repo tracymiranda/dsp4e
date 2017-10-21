@@ -1,0 +1,19 @@
+// Use https://github.com/mbarbero/fr.obeo.releng.targetplatform to generate *.target file from *.tpd file.
+
+target "DSP4E Target Platform"
+
+with source requirements
+
+location "http://download.eclipse.org/releases/oxygen/201710111001" oxygen-1a {
+	org.eclipse.platform.feature.group
+	org.eclipse.equinox.executable.feature.group
+	org.eclipse.e4.rcp.feature.group
+	org.eclipse.ui.trace
+	org.eclipse.pde.feature.group
+}
+
+location "http://download.eclipse.org/lsp4e/releases/0.3.0/" lsp4e {
+	org.eclipse.lsp4e
+	org.eclipse.lsp4j
+	org.eclipse.lsp4j.jsonrpc
+}
